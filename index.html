@@ -8,22 +8,28 @@
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA">
     </script>
     <script type="text/javascript">
-     function initialize() {
-		  var mapOptions = {
-		    zoom: 17,
-		    center: new google.maps.LatLng(44.4348570,26.0341084)
-		  };
+        function initialize() {
+		    var mapOptions = {
+		        zoom: 17,
+		        center: new google.maps.LatLng(44.4348570,26.0341084)
+		    };
 
-		  var map = new google.maps.Map(document.getElementById('map-canvas'),
-		      mapOptions);
-		}
+		    var map = new google.maps.Map(document.getElementById('map-canvas'),
+		        mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(44.4348570,26.0341084),
+                map: map,
+                title: 'Salut la bajeti! Hai sa ne apucam de dat la lopata!'
+            });
+	    }
 
 		function loadScript() {
-		  var script = document.createElement('script');
-		  script.type = 'text/javascript';
-		  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
-		      'callback=initialize';
-		  document.body.appendChild(script);
+		    var script = document.createElement('script');
+		    script.type = 'text/javascript';
+		    script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
+		        'callback=initialize';
+		    document.body.appendChild(script);
 		}
 
 		window.onload = loadScript;
