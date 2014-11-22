@@ -1,181 +1,190 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style type="text/css">
+<head>
+	<style type="text/css">
 		html, body, .col-md-8, .col-md-4, .container-fluid { height: 100%;}
-		#navRow {height: 10%;} 
-		#contentsRow {height: 90%;} 
+		#navRow {height: 10%;}
+		#contentsRow {height: 90%;}
 		#map-canvas {
 			width:100%;
-		 	height:100%;
+			height:100%;
 		}
 		#myimg { height: 100%; }
-    </style>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Winter is comming</title>
-    <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA">
-    </script>
+	</style>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Winter is comming</title>
+	<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA">
+</script>
 
-    <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
-	<!-- Optional: Include the jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<!-- Optional: Incorporate the Bootstrap JavaScript plugins -->
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- Optional: Include the jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- Optional: Incorporate the Bootstrap JavaScript plugins -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-        var score = 0;
+<script type="text/javascript">
+	var score = 0;
 
-    	function myrand(x, y)
-    	 {
-    	 	return Math.floor(Math.random() * y) + x;
-    	 }
+	function myrand(x, y)
+	{
+		return Math.floor(Math.random() * y) + x;
+	}
 
-        function initialize() {
-        	var center = new google.maps.LatLng(44.438606,26.049492);
-        	var PrefixMessages = [ "Felicitari ai deszapezit ", "Esti cel mai jmecher deszapezitor, ai adunat"];
-        	var SufixMessages = ["Johannis ar fi mandru de tine.", "Daca vrei sa fi si mai cunoscut in \
-        	cercul tau de prieteni transfera acum 50$ in contul RO122991124001245 si vei primi \
-        	1000 de deszapeziri!!!"];
+	function initialize() {
+		var center = new google.maps.LatLng(44.438606,26.049492);
+		var PrefixMessages = [ "Felicitari ai deszapezit ", "Esti cel mai jmecher deszapezitor, ai adunat"];
+		var SufixMessages = ["Johannis ar fi mandru de tine.", "Daca vrei sa fi si mai cunoscut in \
+		cercul tau de prieteni transfera acum 50$ in contul RO122991124001245 si vei primi \
+		1000 de deszapeziri!!!"];
 
-        	var Ads = [ "\"Noi votam, nu pontam\"", "\"Cine tace si face? Iohannis!\"",
-        	 			"\"Cine este generalul pentru care merita sa ne sacrificam fiecare minut si fiecare picatura \
-        	 			de sudoare?\""];
+		var Ads = [ "\"Noi votam, nu pontam\"", "\"Cine tace si face? Iohannis!\"",
+		"\"Cine este generalul pentru care merita sa ne sacrificam fiecare minut si fiecare picatura \
+		de sudoare?\""];
 
 
 
-		    var mapOptions = {
-		        zoom: 15,
-		        center: new google.maps.LatLng(44.438606,26.049492)
-		    };
+		var mapOptions = {
+			zoom: 15,
+			center: new google.maps.LatLng(44.438606,26.049492)
+		};
 
-		    var map = new google.maps.Map(document.getElementById('map-canvas'),
-		        mapOptions);
+		var map = new google.maps.Map(document.getElementById('map-canvas'),
+			mapOptions);
 
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(44.438606,26.049492),
-                map: map,
-                title: 'Salut la bajeti! Hai sa ne apucam de dat la lopata!'
-            });
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(44.438606,26.049492),
+			map: map,
+			title: 'Salut la bajeti! Hai sa ne apucam de dat la lopata!'
+		});
 
-            for (var i = 0; i < 50; i++)
-            {
-            	var marker1 = new google.maps.Marker({
-		                position: new google.maps.LatLng(
-		                	44.438606 +  Math.random() / 100 ,
-		                	26.049492 +  Math.random() / 100),
-		                map: map,
-		                title: 'Marker ' + i
-	            	});
-
-            	google.maps.event.addListener(marker1, 'click', function() {
-            		score++;
-            		var x =  $("body").html();
-				    $("body").html("</br></br>" + "<p>" + PrefixMessages[myrand(0, PrefixMessages.length)] + score + " locatii. " + SufixMessages[myrand(0, SufixMessages.length)] + "</p>" +
-				    	 "</br>" + '<p style="font-style:italic;padding: 10px; text-align: right;">' +
-				    	 Ads[myrand(0, Ads.length)]);
-				    
-				    window.setTimeout(function() { $("body").html(x); }, 5000);
-				  });
-            }
-
-        	google.maps.event.addListener(map, 'click', function(event) {
-			   placeMarker(event.latLng);
+		for (var i = 0; i < 50; i++)
+		{
+			var marker1 = new google.maps.Marker({
+				position: new google.maps.LatLng(
+					44.438606 +  Math.random() / 100 ,
+					26.049492 +  Math.random() / 100),
+				map: map,
+				title: 'Marker ' + i
 			});
-	  
 
-			function placeMarker(location) {
+			google.maps.event.addListener(marker1, 'click', function() {
+				score++;
+				var x =  $("body").html();
+				$("body").html("</br></br>" + "<p>" + PrefixMessages[myrand(0, PrefixMessages.length)] + score + " locatii. " + SufixMessages[myrand(0, SufixMessages.length)] + "</p>" +
+					"</br>" + '<p style="font-style:italic;padding: 10px; text-align: right;">' +
+					Ads[myrand(0, Ads.length)]);
 
-				var image = {
-			        url: 'images/car.jpeg',
-			        origin: new google.maps.Point(0, 0),
-			        anchor: new google.maps.Point(25, 25),
-			        scaledSize: new google.maps.Size(50, 50)
-			    };
-    
-			    var marker = new google.maps.Marker({
-			        position: location, 
-			        map: map,
-			        icon: image
-			    });
-			}
-
+				window.setTimeout(function() { $("body").html(x); }, 5000);
+			});
 		}
 
-		function loadScript() {
-		    var script = document.createElement('script');
-		    script.type = 'text/javascript';
-		    script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
-		        'callback=initialize';
-		    document.body.appendChild(script);
+		google.maps.event.addListener(map, 'click', function(event) {
+			placeMarker(event.latLng);
+		});
+
+
+		function placeMarker(location) {
+
+			var image = {
+				url: 'images/car.jpeg',
+				origin: new google.maps.Point(0, 0),
+				anchor: new google.maps.Point(25, 25),
+				scaledSize: new google.maps.Size(50, 50)
+			};
+
+			var marker = new google.maps.Marker({
+				position: location,
+				map: map,
+				icon: image
+			});
 		}
 
-		window.onload = loadScript;
-    </script>
-  </head>
+	}
 
-  <body>
-    <div class="buttons">
-        <input type="image" id="myimage" src="images/car.jpeg"/>
-        <input type="image" id="myimage" src="images/street.jpeg"/>
-        <input type="image" id="myimage" src="images/home.jpg"/>
-    </div>
+	function loadScript() {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
+		'callback=initialize';
+		document.body.appendChild(script);
+	}
+
+	window.onload = loadScript;
+</script>
+</head>
+
+<body>
+
+	<div class="top-bar">
+		<div class="col-sm-3" style="background-color:lavender;">Winter is Coming!</div>
+		<div class="col-sm-6" style="background-color:lavender;">Search bar</div>
+		<div class="col-sm-3" style="background-color:lavender;">Username</div>
+	</div>
+
+	<div class="buttons">
+		<input type="image" id="myimage" src="images/car.jpeg"/>
+		<input type="image" id="myimage" src="images/street.jpeg"/>
+		<input type="image" id="myimage" src="images/home.jpg"/>
+	</div>
+
+
 	<div class="container-fluid">
 		<div class="row" id="navRow">
 			<div class="col-md-12">
 				<nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
-				    <!-- Brand and toggle get grouped for better mobile display -->
-				    <div class="navbar-header">
-				        <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-				            <span class="sr-only">Toggle navigation</span>
-				            <span class="icon-bar"></span>
-				            <span class="icon-bar"></span>
-				            <span class="icon-bar"></span>
-				        </button>
-				        <a href="#" class="navbar-brand">Brand</a>
-				    </div>
-				    <!-- Collection of nav links, forms, and other content for toggling -->
-				    <div id="navbarCollapse" class="collapse navbar-collapse">
-				        <ul class="nav navbar-nav">
-				            <li class="active"><a href="#">Home</a></li>
-				            <li><a href="#">Profile</a></li>
-				            <li class="dropdown">
-				                <a data-toggle="dropdown" class="dropdown-toggle" href="#">Messages <b class="caret"></b></a>
-				                <ul role="menu" class="dropdown-menu">
-				                    <li><a href="#">Inbox</a></li>
-				                    <li><a href="#">Drafts</a></li>
-				                    <li><a href="#">Sent Items</a></li>
-				                    <li class="divider"></li>
-				                    <li><a href="#">Trash</a></li>
-				                </ul>
-				            </li>
-				        </ul>
-				        <form role="search" class="navbar-form navbar-left">
-				            <div class="form-group">
-				                <input type="text" placeholder="Search" class="form-control">
-				            </div>
-				        </form>
-				        <ul class="nav navbar-nav navbar-right">
-				            <li><a href="#">Login</a></li>
-				        </ul>
-				    </div>
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a href="#" class="navbar-brand">Brand</a>
+					</div>
+					<!-- Collection of nav links, forms, and other content for toggling -->
+					<div id="navbarCollapse" class="collapse navbar-collapse">
+						<ul class="nav navbar-nav">
+							<li class="active"><a href="#">Home</a></li>
+							<li><a href="#">Profile</a></li>
+							<li class="dropdown">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">Messages <b class="caret"></b></a>
+								<ul role="menu" class="dropdown-menu">
+									<li><a href="#">Inbox</a></li>
+									<li><a href="#">Drafts</a></li>
+									<li><a href="#">Sent Items</a></li>
+									<li class="divider"></li>
+									<li><a href="#">Trash</a></li>
+								</ul>
+							</li>
+						</ul>
+						<form role="search" class="navbar-form navbar-left">
+							<div class="form-group">
+								<input type="text" placeholder="Search" class="form-control">
+							</div>
+						</form>
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#">Login</a></li>
+						</ul>
+					</div>
 				</nav>
 			</div>
 		</div>
 
 
 		<div class="row" id="contentsRow">
-		  <div class="col-md-8">
-		  	<div id="map-canvas"></div>
-		  </div>
-		  <div class="col-md-4">
-		  	<img src="images/winteriscoming.png" alt="Winter is coming" class="img-responsive" id="myimg">
-		  </div>
+			<div class="col-md-8">
+				<div id="map-canvas"></div>
+			</div>
+			<div class="col-md-4">
+				<img src="images/winteriscoming.png" alt="Winter is coming" class="img-responsive" id="myimg">
+			</div>
 		</div>
 
 	</div>
 
-  </body>
+</body>
 </html>
