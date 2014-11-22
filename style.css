@@ -2170,11 +2170,12 @@ input[type="button"].btn-block {
 }
 
 #myimage {
-    border-radius: 50px;
-    height: 100px;
-    width: 100px;
-    margin-top: 100px;
-    margin-left: 75px;
+    border-radius: 100px;
+    height: 170px;
+    width: 170px;
+    margin-top: 80px;
+    margin-right: 100px;
+    margin-left: 0px;
 }
 
 #searchInput {
@@ -2192,6 +2193,31 @@ input[type="button"].btn-block {
   line-height: 20px;
   color: #FFFFFF;
   text-align: center;
+}
+
+.panel-height {
+       height: 270px;
+}
+.panel-heading {
+
+    background-color: #819FF7 !important;
+}
+
+
+.clickable {
+    background: rgba(0, 0, 0, 0.15);
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.spacer {
+    margin-top: 100px; /* define margin as you see fit */
+}
+
+.yellow {
+	color: #FFFF00;
 }
 
 #myimg { height: 100%; }
@@ -2677,7 +2703,7 @@ button.close {
   padding-right: 15px;
   padding-left: 15px;
   margin-bottom: 20px;
-  background-color: #81DAF5;
+  background-color: #819FF7;
   border-radius: 4px;
 }
 
