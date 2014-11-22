@@ -44,6 +44,8 @@
         	 			"\"Cine este generalul pentru care merita sa ne sacrificam fiecare minut si fiecare picatura \
         	 			de sudoare?\""];
 
+
+
 		    var mapOptions = {
 		        zoom: 15,
 		        center: new google.maps.LatLng(44.438606,26.049492)
@@ -78,7 +80,29 @@
 				    window.setTimeout(function() { $("body").html(x); }, 5000);
 				  });
             }
-	    }
+
+        	google.maps.event.addListener(map, 'click', function(event) {
+			   placeMarker(event.latLng);
+			});
+	  
+
+			function placeMarker(location) {
+
+				var image = {
+			        url: 'images/car.jpeg',
+			        origin: new google.maps.Point(0, 0),
+			        anchor: new google.maps.Point(25, 25),
+			        scaledSize: new google.maps.Size(50, 50)
+			    };
+    
+			    var marker = new google.maps.Marker({
+			        position: location, 
+			        map: map,
+			        icon: image
+			    });
+			}
+
+		}
 
 		function loadScript() {
 		    var script = document.createElement('script');
