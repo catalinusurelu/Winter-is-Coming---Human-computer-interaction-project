@@ -1,0 +1,16 @@
+{
+  "first_name": "Ion",
+  "last_name": "Andrei",
+  "email": "yo@me32",
+  "upvotes": 23,
+  "password": 111
+}
+
+{	"name": "5 event",
+ 	"latitude": 45.32,
+ 	"longitude": 23.33,
+ 	"upvotes": 33,
+     "event_type" : "street",
+     "event_status" : "started",
+ 	"creator_id": 1
+}
