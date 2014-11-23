@@ -133,12 +133,11 @@
 				cache: false,
 				timeout: 10000,
 				processData: false,
-				async: false
-
 			});
 
 			request.done(function(top_events) {
 				$scope.top_events = $.parseJSON(top_events);
+				$scope.$apply();
 			});
 		}
 
@@ -151,12 +150,11 @@
 				cache: false,
 				timeout: 10000,
 				processData: false,
-				async: false
-
 			});
 
 			request.done(function(top_users) {
 				$scope.top_users = $.parseJSON(top_users);
+				$scope.$apply();
 			});
 		}
 
