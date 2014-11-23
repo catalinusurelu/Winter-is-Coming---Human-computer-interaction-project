@@ -70,12 +70,12 @@
 		var map = new google.maps.Map(document.getElementById('map-canvas'),
 			mapOptions);
 
-		for (var i = 0; i < 50; i++)
+		for (var i = 0; i < 8; i++)
 		{
 			var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(
-					44.438606 +  Math.random() / 100 ,
-					26.049492 +  Math.random() / 100),
+					44.438606 +  Math.random() / 50 ,
+					26.049492 +  Math.random() / 50),
 				map: map,
 				title: 'Marker ' + i
 			});
