@@ -60,7 +60,8 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 
 
-@app.route('/users', methods=['GET', 'POST'])
+@app.route('/users', methods=['GET', 'POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])
 def users():
     if(request.method == "GET"):
         users = User.query.all()
@@ -80,7 +81,8 @@ def users():
 
         return "POST Echo\n" + str(jss)
 
-@app.route('/events', methods=['GET', 'POST'])
+@app.route('/events', methods=['GET', 'POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])
 def events():
     if(request.method == "GET"):
         events = Event.query.all()
@@ -100,7 +102,8 @@ def events():
 
         return "POST Echo\n" + str(jss)
 
-@app.route('/close_event/<int:event_id>', methods=['POST'])
+@app.route('/close_event/<int:event_id>', methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['Content-Type'])
 def close_event(event_id):
         event = Event.query.get(event_id)
         event.event_status = 'closed'
@@ -109,7 +112,8 @@ def close_event(event_id):
 
         return "POST Echo\n" + str(event.to_dict)
 
-@app.route('/users/<int:user_id>/events', methods=['GET', 'POST', "DELETE"])
+@app.route('/users/<int:user_id>/events', methods=['GET', 'POST', "DELETE", 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'POST', "DELETE", 'OPTIONS'], headers=['Content-Type'])
 def user_events(user_id):
     user = User.query.get(user_id)
 
