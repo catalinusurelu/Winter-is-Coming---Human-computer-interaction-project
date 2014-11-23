@@ -168,4 +168,4 @@ def top_users():
         for x in users:
             user_list.append(x.to_dict())
 
-    return "GET Echo\n" + json.dumps(user_list, sort_keys=True, indent=4, separators=(',', ': '))
+    return json.dumps(user_list, sort_keys=True, indent=4, separators=(',', ': '))
