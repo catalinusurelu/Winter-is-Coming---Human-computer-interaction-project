@@ -165,30 +165,38 @@
 	<div id="legend">
 		<div class="container-fluid">
 			<div class="row">
-				<h3>Titlu eveniment</h3>
+				<h4> Titlu eveniment <span style="color:#F7BE81; " class="glyphicon glyphicon glyphicon-star"></span> 23</h4>
 			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<img id="snow" src="images/snow.jpg" style="width:80px;height:80px;margin-top:10px">
-				</div>
-				<div class="col-md-8">
-					<h5 style="margin-left:20px;">People who attended this event</h5>
-					<ul>
-						<li>Iordache Catalin</li>
-						<li>Usurelu Catalin</li>
-						<li>Dan Dragan</li>
-					</ul>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<button id="upvote" type="button" onclick="vote()" style="margin-top:10px">Upvote!</button>
-				</div>
-				<div class="col-md-4">
-					<h6 style="margin-left:30px;">Score: <h6>
+			<div class="row col-sm-12">
+
+				<div   class="panel ">
+
+					<div style=" height: 35px;"class="panel-heading">
+						<div class="panel-title"><h6>Participants</h6></div>
+
+					<div ng-controller="topUsersController"  style=" height: 150px; overflow-y:auto !important;" class="panel-body panel-height">
+						<p ng-repeat="x in top_users"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
+						<p ng-repeat="x in top_users"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
+						<p ng-repeat="x in top_users"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
+						<p ng-repeat="x in top_users"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
+						<p ng-repeat="x in top_users"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
+						<p ng-repeat="x in top_users"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
 					</div>
+
 				</div>
 			</div>
+
+			<div class="row col-sm-12 spacer">
+			<div class=" col-sm-6">
+			<button class="btn btn-success btn-block btn-xs" onclick="vote()" ><span class="glyphicon glyphicon-hand-up"></span> +1 </button> </div>
+			<div class=" col-sm-6">
+			<button class="btn btn-danger btn-block btn-xs" onclick="vote()" ><span class="glyphicon glyphicon-hand-down"></span> -1 </button></div>
+
+			</div>
+		</div>
+	</div>
+
+
 		</div>
 		<div class="container" id="main">
 
