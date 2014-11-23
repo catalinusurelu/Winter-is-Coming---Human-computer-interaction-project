@@ -400,14 +400,14 @@
 			</div> <!--End Buttons and map-->
 
 			<!-- Right Side Panels -->
-			<div class="row col-sm-3 spacer">
+			<div ng-app=""  class="row col-sm-3 spacer">
 
 				<!-- Top Users panel -->
 				<div class="panel panel-default panel-width">
 					<div class="panel-heading">
 						<h3 class="panel-title"><b>Top Users</b></h3>
 					</div>
-					<div ng-app="" ng-controller="topUsersController"  style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
+					<div ng-controller="topUsersController"  style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
 						<p ng-repeat="x in top_users"> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }}  </p>
 
 
@@ -419,7 +419,7 @@
 					<div class="panel-heading ">
 						<h3 class="panel-title"><b>Top Events</b></h3>
 					</div>
-					<div ng-app="" ng-controller="topEventsController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
+					<div ng-controller="topEventsController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
 						<p ng-repeat="x in top_events">
 							{{ x.upvotes }} <a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.name }} </p>
 
