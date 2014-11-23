@@ -4731,6 +4731,7 @@ td.visible-print {
   }
 }
 
+<<<<<<< HEAD
 
 
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700);
@@ -4814,3 +4815,14 @@ span.tags
     margin-left: -10px;
     z-index: 10;
     }
+=======
+#legend{
+    margin-top:3px;
+    width: 260px;
+    height: 200px;
+    background-color: #0066CC;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    color:#000000;
+}
+>>>>>>> df4da8663dd6e232ffe1c4639172a0bea00e401a
