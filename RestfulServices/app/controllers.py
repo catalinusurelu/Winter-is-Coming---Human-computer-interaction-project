@@ -69,7 +69,7 @@ def users():
         for x in users:
             user_list.append(x.to_dict())
             
-        return "GET Echo\n" + json.dumps(user_list, sort_keys=True, indent=4, separators=(',', ': '))
+        return json.dumps(user_list, sort_keys=True, indent=4, separators=(',', ': '))
     else:
         app.logger.info("starting")
         jss = request.get_json()
@@ -90,7 +90,7 @@ def events():
         for x in events:
             event_list.append(x.to_dict())
 
-        return "GET Echo\n" + json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
+        return json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
     else:
         jss = request.get_json()
         jss['create_date'] = datetime.now()
@@ -126,7 +126,7 @@ def user_events(user_id):
             for x in user.attending:
                 event_list.append(x.to_dict())
             
-        return "GET Echo\n" + json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
+        return json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
     elif(request.method == "POST"):
         jss = request.get_json()
         event = Event.query.get(jss['id'])
