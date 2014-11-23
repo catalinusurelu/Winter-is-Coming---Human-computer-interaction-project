@@ -29,6 +29,11 @@
 
 <script type="text/javascript">
 	var score = 0;
+    
+    function vote()
+    {
+        score++;
+    }
 
 	function myrand(x, y)
 	{
@@ -137,10 +142,10 @@
             </div>
             <div class="row">
                 <div class="col-md-4">
-                    <button id="upvote" type="button" style="margin-top:10px">Upvote!</button>
+                    <button id="upvote" type="button" onclick="vote()" style="margin-top:10px">Upvote!</button>
                 </div>
                 <div class="col-md-4">
-                    <h6 style="margin-left:30px;">Score:<h6>
+                    <h6 style="margin-left:30px;">Score: <h6>
                 </div>
             </div>
         </div>
