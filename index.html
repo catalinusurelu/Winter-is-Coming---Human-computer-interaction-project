@@ -10,8 +10,9 @@
 
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title>Winter is comming</title>
+
 	<script type="text/javascript"
-	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA">
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA"/>
 </script>
 
 <!-- Latest compiled and minified CSS -->
@@ -121,6 +122,7 @@
 
 	<div class="container" id="main">
 
+		<!-- Navigation bar -->
 		<div class="navbar navbar-fixed-top">
 			<div class="container">
 				<button class="navbar-toggle" data-target=".navbar-responsive-collapse" data-toggle="collapse" type="button">
@@ -134,7 +136,7 @@
 				<div class="nav-collapse collapse navbar-responsive-collapse">
 					<ul class="nav navbar-nav">
 						<li>
-							<a href="#"><i class="glyphicon glyphicon-home"></i></a>
+							<a href="index.html"><i class="glyphicon glyphicon-home"></i></a>
 						</li>
 					</ul>
 
@@ -145,22 +147,11 @@
 
 					<ul class="nav navbar-nav pull-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> My Account <strong class="caret"></strong></a>
-
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Iordache Catalin  46<span class="glyphicon glyphicon-star"></span><strong class="caret"></strong></a>
 							<ul class="dropdown-menu">
 
 								<li>
-									<a href="#"><span class="glyphicon glyphicon-star"></span> 46</a>
-								</li>
-
-								<li class="divider"></li>
-
-								<li>
-									<a href="#"> Events Created</a>
-								</li>
-
-								<li>
-									<a href="#"> Events Attended</a>
+									<a href="user.html"> Profile</a>
 								</li>
 
 								<li class="divider"></li>
@@ -173,10 +164,12 @@
 					</ul>
 				</div>
 			</div>
-		</div><!-- end navbar -->
+		</div> <!-- End Navigation bar -->
 
+		<!-- Buttons and map-->
 		<div class="row col-sm-9">
 
+			<!-- Buttons-->
 			<div class="row col-sm-9">
 
 				<div class="col-xs-6 col-md-4">
@@ -190,8 +183,9 @@
 				<div class="col-xs-6 col-md-4">
 					<a href="#"><input type="image" id="myimage" src="images/snowRoad.png"/></a>
 				</div>
-			</div>
+			</div> <!-- End Buttons-->
 
+			<!-- map-->
 			<div class="row col-sm-9">
 				<h4><span class="glyphicon glyphicon-map-marker"></span> Your Location<small> Events near you</small></h4>
 
@@ -199,53 +193,65 @@
 					<div class="google-map-canvas" id="map-canvas">
 					</div>
 				</div>
-			</div>
+			</div> <!-- end map-->
 
-		</div>
+		</div> <!--End Buttons and map-->
 
+		<!-- Right Side Panels -->
 		<div class="row col-sm-3 spacer">
 
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Top Users</h3>
-					</div>
-					<div class="panel-body panel-height">
-
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-
-					</div>
+			<!-- Top Users panel -->
+			<div class="panel panel-default panel-width">
+				<div class="panel-heading">
+					<h3 class="panel-title"><b>Top Users</b></h3>
 				</div>
+				<div div style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
+					<p> <a href="user.html">23<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> Iordache Catalin </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
 
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Top Events</h3>
-					</div>
-					<div class="panel-body panel-height">
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-						<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-					</div>
 				</div>
+			</div> <!-- End Top Users panel -->
 
-		</div>
+			<!-- Top Events panel -->
+			<div class="panel panel-default panel-width">
+				<div class="panel-heading ">
+					<h3 class="panel-title"><b>Top Events</b></h3>
+				</div>
+				<div div style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
+					<p><a href="event.html">12<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> Deszapezire masini P5-P6 </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+				</div>
+			</div> <!-- End Top Events panel -->
 
+		</div> <!-- End right  side panels -->
 
+		<!-- Events near you -->
 		<div class="row col-sm-12">
 			<div class="panel panel-default">
 				<div class="panel-heading"></div>
-				<div class="panel-body">
-					<p></p>
+				<div div style=" height: 100px; overflow-y:auto !important;" class="panel-body panel-height">
+					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> Deszapezire trotuare Regie P15-P16-P17 </a></p>
+					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
+					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
 					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
 					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
 				</div>
 			</div>
-		</div>
+		</div> <!-- End events near you -->
 
 	</body>
 	</html>
