@@ -11,9 +11,10 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title>Winter is comming</title>
 	<script type="text/javascript"
-	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA">
-</script>
-
+	    src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA">
+    </script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+ 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
@@ -34,19 +35,21 @@
 		return Math.floor(Math.random() * y) + x;
 	}
 
+    function showlegend()
+    {
+        var elem = document.getElementById('legend');
+        elem.style.display = 'block';
+    }
+
+    function hidelegend()
+    {
+        var elem = document.getElementById('legend');
+        elem.style.display = 'none';
+    }
+
 	function initialize() {
 		var center = new google.maps.LatLng(44.438606,26.049492);
-		var PrefixMessages = [ "Felicitari ai deszapezit ", "Esti cel mai jmecher deszapezitor, ai adunat"];
-		var SufixMessages = ["Johannis ar fi mandru de tine.", "Daca vrei sa fi si mai cunoscut in \
-		cercul tau de prieteni transfera acum 50$ in contul RO122991124001245 si vei primi \
-		1000 de deszapeziri!!!"];
-
-		var Ads = [ "\"Noi votam, nu pontam\"", "\"Cine tace si face? Iohannis!\"",
-		"\"Cine este generalul pentru care merita sa ne sacrificam fiecare minut si fiecare picatura \
-		de sudoare?\""];
-
-
-
+		
 		var mapOptions = {
 			zoom: 15,
 			center: new google.maps.LatLng(44.438606,26.049492)
@@ -55,15 +58,9 @@
 		var map = new google.maps.Map(document.getElementById('map-canvas'),
 			mapOptions);
 
-		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(44.438606,26.049492),
-			map: map,
-			title: 'Salut la bajeti! Hai sa ne apucam de dat la lopata!'
-		});
-
 		for (var i = 0; i < 50; i++)
 		{
-			var marker1 = new google.maps.Marker({
+			var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(
 					44.438606 +  Math.random() / 100 ,
 					26.049492 +  Math.random() / 100),
@@ -71,16 +68,17 @@
 				title: 'Marker ' + i
 			});
 
-			google.maps.event.addListener(marker1, 'click', function() {
+			google.maps.event.addListener(marker, 'click', function() {
 				score++;
-				var x =  $("body").html();
-				$("body").html("</br></br>" + "<p>" + PrefixMessages[myrand(0, PrefixMessages.length)] + score + " locatii. " + SufixMessages[myrand(0, SufixMessages.length)] + "</p>" +
-					"</br>" + '<p style="font-style:italic;padding: 10px; text-align: right;">' +
-					Ads[myrand(0, Ads.length)]);
+                showlegend();
+				map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+                document.getElementById('legend'));
+			}); 
 
-				window.setTimeout(function() { $("body").html(x); }, 5000);
+            google.maps.event.addListener(map, 'click', function() {
+				hidelegend();
 			});
-		}
+        }
 
 		google.maps.event.addListener(map, 'click', function(event) {
 			placeMarker(event.latLng);
@@ -106,6 +104,7 @@
 	}
 
 	function loadScript() {
+        hidelegend();
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
@@ -118,7 +117,34 @@
 </head>
 
 <body>
-
+    <div id="legend">
+        <div class="container-fluid">
+            <div class="row">
+                <h3>Titlu eveniment</h3>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <img id="snow" src="images/snow.jpg" style="width:80px;height:80px;margin-top:10px">
+                </div>
+                <div class="col-md-8">
+                    <h5 style="margin-left:20px;">HELPERS:</h5>
+                     <ul>
+                        <li>Iordache Catalin</li>
+                        <li>Usurelu Catalin</li>
+                        <li>Dan Dragan</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <button id="upvote" type="button" style="margin-top:10px">Upvote!</button>
+                </div>
+                <div class="col-md-4">
+                    <h6 style="margin-left:30px;">Score:<h6>
+                </div>
+            </div>
+        </div>
+    </div>
 	<div class="container" id="main">
 
 		<div class="navbar navbar-fixed-top">
