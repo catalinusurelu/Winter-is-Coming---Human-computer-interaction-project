@@ -2171,7 +2171,7 @@
 
  #myimage {
  	border-style: none;
- 	border: none !important;
+ 	border: 0;
  	height: 170px;
  	width: 170px;
  	margin-top: 80px;
