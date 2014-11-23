@@ -410,7 +410,7 @@
 						<h3 class="panel-title"><b>Top Users</b></h3>
 					</div>
 					<div ng-app="" ng-controller="topUsersController"  style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
-						<p ng-repeat="x in top_users"> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> {{ x.first_name + " " + x.last_name }} </a></p>
+						<p ng-repeat="x in top_users"> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }}  </p>
 
 
 					</div>
