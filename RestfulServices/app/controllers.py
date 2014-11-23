@@ -9,6 +9,56 @@ import json
 
 from sqlalchemy import desc
 
+from datetime import timedelta
+from flask import make_response, request, current_app
+from functools import update_wrapper
+
+
+def crossdomain(origin=None, methods=None, headers=None,
+                max_age=21600, attach_to_all=True,
+                automatic_options=True):
+    if methods is not None:
+        methods = ', '.join(sorted(x.upper() for x in methods))
+    app.logger.info(methods)
+    if headers is not None and not isinstance(headers, basestring):
+        headers = ', '.join(x.upper() for x in headers)
+    if not isinstance(origin, basestring):
+        origin = ', '.join(origin)
+    if isinstance(max_age, timedelta):
+        max_age = max_age.total_seconds()
+
+    def get_methods():
+        if methods is not None:
+            return methods
+
+        options_resp = current_app.make_default_options_response()
+        return options_resp.headers['allow']
+
+    def decorator(f):
+        def wrapped_function(*args, **kwargs):
+            app.logger.info("Req method " + request.method)
+            if automatic_options and request.method == 'OPTIONS':
+                resp = current_app.make_default_options_response()
+            else:
+                resp = make_response(f(*args, **kwargs))
+            if not attach_to_all and request.method != 'OPTIONS':
+                return resp
+
+            h = resp.headers
+
+            h['Access-Control-Allow-Origin'] = origin
+            h['Access-Control-Allow-Methods'] = get_methods()
+            h['Access-Control-Max-Age'] = str(max_age)
+            if headers is not None:
+                h['Access-Control-Allow-Headers'] = headers
+            return resp
+
+            app.logger.info('OK')
+
+        f.provide_automatic_options = False
+        return update_wrapper(wrapped_function, f)
+    return decorator
+
 
 @app.route('/users', methods=['GET', 'POST'])
 def users():
@@ -94,7 +144,8 @@ def user_events(user_id):
 
 
 
-@app.route('/top_events')
+@app.route('/top_events', methods=['GET', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
 def top_events():
    
     events = Event.query.filter(Event.event_status == "started").order_by(desc(Event.upvotes)).all()
@@ -104,10 +155,11 @@ def top_events():
         for x in events:
             event_list.append(x.to_dict())
 
-    return "GET Echo\n" + json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
+    return json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
     
 
-@app.route('/top_users')
+@app.route('/top_users', methods=['GET', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
 def top_users():
    
     users = User.query.order_by(desc(User.upvotes)).all()
