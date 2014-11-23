@@ -11,6 +11,8 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title>Winter is comming</title>
 
+<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
 	<script type="text/javascript"
 <<<<<<< HEAD
 	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCjbB09O_sqkZvZSiSBGiGlv_7RHSAUBIA"/>
@@ -125,6 +127,25 @@
 	}
 
 	window.onload = loadScript;
+
+
+	function topEventsController($scope) {
+	    var request = $.ajax({
+	        url: "http://128.199.38.110:5000/top_events",
+	        type: "GET",
+	        conection: "keep-alive",
+	        contentType: "application/json",
+	        cache: false,
+	        timeout: 10000,
+	        processData: false,
+	       
+	    });
+
+	    request.done(function(top_events) {
+	    	$scope.top_event = top_events;
+	    });
+	}
+
 </script>
 </head>
 
@@ -265,12 +286,10 @@
 				<div class="panel-heading ">
 					<h3 class="panel-title"><b>Top Events</b></h3>
 				</div>
-				<div div style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
-					<p><a href="event.html">12<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> Deszapezire masini P5-P6 </a></p>
-					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
-					<p><a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a></p>
+				<div ng-app="" ng-controller="topEventsController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
+					<p ng-repeat="x in top_events">
+						{{ x.upvotes }} <a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.name }} </p>
+					
 				</div>
 			</div> <!-- End Top Events panel -->
 
