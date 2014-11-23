@@ -2170,13 +2170,15 @@
  }
 
  #myimage {
- 	border-radius: 100px;
+ 	border-style: none;
+ 	border: none !important;
  	height: 170px;
  	width: 170px;
  	margin-top: 80px;
  	margin-right: 100px;
  	margin-left: 0px;
  }
+ *:focus { outline: none; }
 
  #searchInput {
  	width: 500px;
@@ -4830,7 +4832,3 @@
  	margin-top:20%;
  	margin-left:30%;
  }
-
-*:focus {
-    outline: 0;
-}
