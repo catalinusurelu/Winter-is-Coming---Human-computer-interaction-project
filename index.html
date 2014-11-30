@@ -76,17 +76,17 @@
 			});
 
 			request.done(function(top_events) {
-				top_events = $.parseJSON(top_events);
+				var top_events = $.parseJSON(top_events);
 
 				for (var i = 0; i < top_events.length; i++)
 				{
 					var marker = new google.maps.Marker({
 						position: new google.maps.LatLng(
 							top_events[i].latitude,
-							top_events[i].longitude,
+							top_events[i].longitude),
 						map: map,
 						title: 'Marker id ' + top_events[i].id,
-						event_id = top_events[i].id
+						event_id : top_events[i].id
 					});
 
 					google.maps.event.addListener(marker, 'click', function() {
@@ -99,7 +99,7 @@
 						hidelegend();
 					});
 				}
-			}
+			});
 
 			
 			// Add map event on mouse click.
@@ -166,6 +166,23 @@
 
 			request.done(function(top_users) {
 				$scope.top_users = $.parseJSON(top_users);
+				$scope.$apply();
+			});
+		}
+
+		function nearbyEventsController($scope) {
+			var request = $.ajax({
+				url: "http://128.199.38.110:5000/top_events?latitude=44.438&longitude=26.049&radius=0.00001",
+				type: "GET",
+				conection: "keep-alive",
+				contentType: "application/json",
+				cache: false,
+				timeout: 10000,
+				processData: false,
+			});
+
+			request.done(function(top_events) {
+				$scope.top_events = $.parseJSON(top_events);
 				$scope.$apply();
 			});
 		}
@@ -450,14 +467,10 @@
 					<h4><span class="glyphicon glyphicon-map-marker"></span> Your Location<small> Events near you</small></h4>
 					<div class="panel panel-default">
 						<div class="panel-heading"></div>
-						<div div style=" height: 100px; overflow-y:auto !important;" class="panel-body panel-height">
-							<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> Deszapezire trotuare Regie P15-P16-P17 </a></p>
-							<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
-							<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
-							<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
-							<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
+						<<div ng-controller="nearbyEventsController" style=" height: 100px; overflow-y:auto !important;" class="	panel-body panel-height">
+						<p ng-repeat="x in top_events">
+							{{ x.upvotes }} <a href="#"><span style="color:#FF0040;" class="glyphicon glyphicon-star"></span> </a> {{ x.name }} </p>
 						</div>
-					</div>
 				</div> <!-- End events near you -->
 
 			</body>
