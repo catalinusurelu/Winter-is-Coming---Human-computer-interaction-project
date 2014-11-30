@@ -32,12 +32,6 @@
 	<link href="/style.css" rel="stylesheet">
 
 	<script type="text/javascript">
-		var score = 0;
-
-		function vote()
-		{
-			score++;
-		}
 
 		function myrand(x, y)
 		{
@@ -56,6 +50,8 @@
 			elem.style.display = 'none';
 		}
 
+
+		// Populate map events.
 		function initialize() {
 			var center = new google.maps.LatLng(44.438606,26.049492);
 
@@ -67,49 +63,65 @@
 			var map = new google.maps.Map(document.getElementById('map-canvas'),
 				mapOptions);
 
-			for (var i = 0; i < 8; i++)
-			{
-				var marker = new google.maps.Marker({
-					position: new google.maps.LatLng(
-						44.438606 +  Math.random() / 50 ,
-						26.049492 +  Math.random() / 50),
-					map: map,
-					title: 'Marker ' + i
-				});
 
-				google.maps.event.addListener(marker, 'click', function() {
-					score++;
-					showlegend();
-					map.controls[google.maps.ControlPosition.TOP_CENTER].push(
-						document.getElementById('legend'));
-				});
+			// Get stored event and place them on map.
+			var request = $.ajax({
+				url: "http://128.199.38.110:5000/top_events",
+				type: "GET",
+				conection: "keep-alive",
+				contentType: "application/json",
+				cache: false,
+				timeout: 10000,
+				processData: false,
+			});
 
-				google.maps.event.addListener(map, 'click', function() {
-					hidelegend();
-				});
+			request.done(function(top_events) {
+				top_events = $.parseJSON(top_events);
+
+				for (var i = 0; i < top_events.length; i++)
+				{
+					var marker = new google.maps.Marker({
+						position: new google.maps.LatLng(
+							top_events[i].latitude,
+							top_events[i].longitude,
+						map: map,
+						title: 'Marker id ' + top_events[i].id,
+						event_id = top_events[i].id
+					});
+
+					google.maps.event.addListener(marker, 'click', function() {
+						showlegend();
+						map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+							document.getElementById('legend'));
+					});
+
+					google.maps.event.addListener(map, 'click', function() {
+						hidelegend();
+					});
+				}
 			}
 
+			
+			// Add map event on mouse click.
 			google.maps.event.addListener(map, 'click', function(event) {
 				placeMarker(event.latLng);
 			});
+		}
 
+		function placeMarker(location) {
 
-			function placeMarker(location) {
+			var image = {
+				url: 'images/snowCar.jpeg',
+				origin: new google.maps.Point(0, 0),
+				anchor: new google.maps.Point(25, 25),
+				scaledSize: new google.maps.Size(50, 50)
+			};
 
-				var image = {
-					url: 'images/snowCar.jpeg',
-					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(25, 25),
-					scaledSize: new google.maps.Size(50, 50)
-				};
-
-				var marker = new google.maps.Marker({
-					position: location,
-					map: map,
-					icon: image
-				});
-			}
-
+			var marker = new google.maps.Marker({
+				position: location,
+				map: map,
+				icon: image
+			});
 		}
 
 		function loadScript() {
@@ -119,8 +131,8 @@
 			script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
 			'callback=initialize';
 			document.body.appendChild(script);
-		}
-
+		
+}
 		window.onload = loadScript;
 
 
@@ -315,28 +327,27 @@
 										<p>Adauga un titlu sugestiv situatiei tale, dupa care transmite un mesaj de ajutor celor din apropierea ta impreuna cu locul exact unde te afli.</p>
 
 										<hr>
-										<p><small class="text-muted"><span class="tags">hint:</span> o fotografie face cat o mie de cuvinte</small></p>
+										<p><small class="text-muted"><span class="tags">hint:</span> o fotografie face cat o mie de cuvinte</small> <button class="btn btn-primary" data-dismiss="modal" type="button" id = "createEventUpload"><span class="glyphicon glyphicon-picture"></span> </p>
 
 										<form class="form-horizontal">
 											<div class="form-group">
-												<label class="col-lg-2 control-label" for="inputName">Titlu</label>
+												<label class="col-lg-2 control-label" for="createEventTitle">Titlu</label>
 												<div class="col-lg-10">
-													<input class="form-control" id="inputName" placeholder="Title" type="text">
+													<input class="form-control" id="createEventTitle" placeholder="Title" type="text">
 												</div>
 											</div>
 
 											<div class="form-group">
-												<label class="col-lg-2 control-label" for="inputMessage">Mesaj</label>
+												<label class="col-lg-2 control-label" for="createEventMessage">Mesaj</label>
 												<div class="col-lg-10">
-													<textarea class="form-control" id="inputMessage" placeholder="Message" rows="3"></textarea>
+													<textarea class="form-control" id="createEventMessage" placeholder="Message" rows="3"></textarea>
 												</div>
 											</div>
 										</form>
 									</div><!-- end modal-body -->
 
 									<div class="modal-footer">
-										<button class="btn btn-primary" data-dismiss="modal" type="button"><span class="glyphicon glyphicon-picture"></span>
-										<button class="btn btn-danger" data-dismiss="modal" type="button"><span class="glyphicon glyphicon-map-marker"></span> </button>
+										
 										<button class="btn btn-success " type="button">Post</button>
 
 									</div><!-- end modal-footer -->
@@ -397,8 +408,6 @@
 
 				<!-- map-->
 				<div class="row col-sm-9">
-					<h4><span class="glyphicon glyphicon-map-marker"></span> Your Location<small> Events near you</small></h4>
-
 					<div class="col-sm-9">
 						<div class="google-map-canvas" id="map-canvas">
 						</div>
@@ -438,6 +447,7 @@
 
 				<!-- Events near you -->
 				<div class="row col-sm-12">
+					<h4><span class="glyphicon glyphicon-map-marker"></span> Your Location<small> Events near you</small></h4>
 					<div class="panel panel-default">
 						<div class="panel-heading"></div>
 						<div div style=" height: 100px; overflow-y:auto !important;" class="panel-body panel-height">

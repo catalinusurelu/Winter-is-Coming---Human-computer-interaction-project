@@ -148,11 +148,11 @@ def user_events(user_id):
 
 
 
-@app.route('/top_events', methods=['GET', 'OPTIONS'])
+@app.route('/nearby_events', methods=['GET', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
-def top_events():
+def nearby_events(coordinates):
    
-    events = Event.query.filter(Event.event_status == "started").order_by(desc(Event.upvotes)).all()
+
     event_list = []
 
     if(events is not None):
@@ -160,7 +160,29 @@ def top_events():
             event_list.append(x.to_dict())
 
     return json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
-    
+
+@app.route('/top_events/<string:coordinates>', methods=['GET', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
+def top_events():
+
+    latitude = request.args.get('latitude')
+    longitude = request.args.get('longitude')
+    radius = request.args.get('radius')
+
+    if(latitude is not None and longitude is not None and radius is not None):
+            events = Event.query.filter(Event.event_status == "started", 
+                Event.latitude - coordinates.latitude < coordinates.radius,
+                Event.longitude - coordinates.longitude).order_by(desc(Event.upvotes)).all()
+    else:
+        events = Event.query.filter(Event.event_status == "started", coordinates).order_by(desc(Event.upvotes)).all()
+    event_list = []
+
+    if(events is not None):
+        for x in events:
+            event_list.append(x.to_dict())
+
+    return json.dumps(event_list, sort_keys=True, indent=4, separators=(',', ': '))
+
 
 @app.route('/top_users', methods=['GET', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
