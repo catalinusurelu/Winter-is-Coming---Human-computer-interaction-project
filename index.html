@@ -105,8 +105,6 @@
             google.maps.event.addListener(map, 'click', function(event) {
                 placeMarker(event.latLng);
             });
-
-            window.location = "login.html";
         }
 
         function placeMarker(location) {
@@ -126,7 +124,7 @@
         }
 
         function loadScript() {
-        	if(!sessionStorage.user || !localStorage.user) {
+        	if(!sessionStorage.user && !localStorage.user) {
         		window.location.href = "login.html";
         	}
 
@@ -138,7 +136,7 @@
         		storage = localStorage;
         	}
 
-        	user = storage['user'];
+        	user = $.parseJSON(storage['user']);
 
         	$("#userName").text(user.first_name + " " + user.last_name + " " + user.upvotes);
 

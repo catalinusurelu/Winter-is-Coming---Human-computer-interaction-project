@@ -20,7 +20,15 @@
 
 		<script>
 			
-			function singup() {
+			function signup() {
+				var storage = undefined;
+				if($("#rememberMe").prop("checked")) {
+					storage = localStorage;
+				}
+				else {
+					storage = sessionStorage;
+				}
+
 				var user = new Object();
 
 				user.first_name = $("#firstName").val();
@@ -29,13 +37,14 @@
 				user.password = $("#password").val();
 				user.upvotes = 0;
 
-				if($("#password").val() != $("#confirmPassword").val()) {
-					ajaxFailed("Password must match!");
+				if(user.first_name == "" || user.last_name == "" || user.email == "" || user.password == "") {
+					ajaxFailed("Please fill out all fields!");
 					return;
 				}
 
-				if(user.first_name == "" && user.last_name == "" && user.email == "" && user.password == "") {
-					ajaxFailed("Please fill out all fields!");
+
+				if($("#password").val() != $("#confirmPassword").val()) {
+					ajaxFailed("Password must match!");
 					return;
 				}
 
@@ -44,15 +53,16 @@
 	                type: "POST",
 	                conection: "keep-alive",
 	                contentType: "application/json",
-	                data: JSON.stringify(user).
+	                data: JSON.stringify(user),
 	                cache: false,
 	                timeout: 10000,
 	                processData: false,
+	                aync: false
 		          });
 
 		        request.done(function() {
 		        	user.password = "";
-		        	storage['user'] = user;
+		        	storage.user = JSON.stringify(user);
 
 		        	window.location.href = "index.html";
 		        });
@@ -62,13 +72,6 @@
 		        });
 
 
-				var storage = undefined;
-				if($("#rememberMe").prop("checked")) {
-					storage = localStorage;
-				}
-				else {
-					storage = sessionStorage;
-				}
 
 
 				function ajaxFailed(message) {
@@ -85,11 +88,11 @@
 				    }).append("<strong>" + message)))
 
 				    window.setTimeout(function() {
-				        $("#removeFailedMessage").fadeTo(500, 0).slideUp(500, function() {
+				        $("#removeFailedMessage").fadeTo(2000, 0).slideUp(2000, function() {
 				            $(this).remove();
 				        });
-				    }, 1000);
-}
+				    }, 3000);
+				}
 			}
 		</script>
 
@@ -174,10 +177,13 @@
 									<input type="checkbox" id="rememberMe">
 									Remember me </label>
 								</div>
-								<button type="submit" class="btn btn btn-primary" onclick="signup()">
-									Sign Up
-								</button>
+								
 							</form>
+
+							<!-- if it is a submit button or it is placed in a form (in some web browsers) it causes a page reload so we don't get a chance to execute the ajax callbacks -->
+							<button type="button" class="btn btn btn-primary" onclick="signup()">
+									Sign Up
+							</button>
 
 						</div>
 
