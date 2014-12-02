@@ -33,6 +33,7 @@ class User(db.Model):
 		dictionary['email'] = self.email
 		dictionary['upvotes'] = self.upvotes
 		dictionary['image_url'] = self.image_url
+		dictionary['password'] = self.password
 
 		return dictionary
 
