@@ -18,6 +18,81 @@
 
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 
+		<script>
+			
+			function singup() {
+				var user = new Object();
+
+				user.first_name = $("#firstName").val();
+				user.last_name = $("#lastName").val();
+				user.email = $("#email").val();
+				user.password = $("#password").val();
+				user.upvotes = 0;
+
+				if($("#password").val() != $("#confirmPassword").val()) {
+					ajaxFailed("Password must match!");
+					return;
+				}
+
+				if(user.first_name == "" && user.last_name == "" && user.email == "" && user.password == "") {
+					ajaxFailed("Please fill out all fields!");
+					return;
+				}
+
+				var request = $.ajax({
+	                url: "http://128.199.38.110:5000/users",
+	                type: "POST",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                data: JSON.stringify(user).
+	                cache: false,
+	                timeout: 10000,
+	                processData: false,
+		          });
+
+		        request.done(function() {
+		        	user.password = "";
+		        	storage['user'] = user;
+
+		        	window.location.href = "index.html";
+		        });
+
+		        request.fail(function() {
+		        	ajaxFailed("Something went horribly wrong with your request, please try again later!");
+		        });
+
+
+				var storage = undefined;
+				if($("#rememberMe").prop("checked")) {
+					storage = localStorage;
+				}
+				else {
+					storage = sessionStorage;
+				}
+
+
+				function ajaxFailed(message) {
+
+				    $("#signUpTitle").
+				    append($("<div/>", {
+				        class: "row",
+				        id: "removeFailedMessage",
+				        style: "margin-top:10px;margin-bottom:10px;text-align:center"
+				    }).append($("<div/>", {
+				        class: "alert alert-danger",
+				        role: "alert",
+				        style: "margin-bottom:0px"
+				    }).append("<strong>" + message)))
+
+				    window.setTimeout(function() {
+				        $("#removeFailedMessage").fadeTo(500, 0).slideUp(500, function() {
+				            $(this).remove();
+				        });
+				    }, 1000);
+}
+			}
+		</script>
+
 	</head>
 
 	<body>
@@ -73,33 +148,33 @@
 
 					<div class="main">
 
-						<h3>Sign Up</a></h3>
+						<div id='signUpTitle' > <h3>Sign Up</a></h3> </div>
 						<div class="login-or">
 							<hr >
 						</div>
 
 						<form role="form">
 							<div class="form-group">
-								<input type="text" class="form-control" id="inputUsernameEmail"  placeholder="First Name"	>
+								<input type="text" class="form-control" id="firstName"  placeholder="First Name"	>
 							</div>
 							<div class="form-group">
-								<input type="text" class="form-control" id="inputUsernameEmail" placeholder="Last Name">
+								<input type="text" class="form-control" id="lastName" placeholder="Last Name">
 							</div>
 							<div class="form-group">
-								<input type="text" class="form-control" id="inputUsernameEmail" placeholder="Email">
+								<input type="text" class="form-control" id="email" placeholder="Email">
 							</div>
 							<div class="form-group">
-								<input type="password" class="form-control" id="inputPassword" placeholder="Password">
+								<input type="password" class="form-control" id="password" placeholder="Password">
 							</div>
 							<div class="form-group">
-								<input type="password" class="form-control" id="inputPassword" placeholder="Confirm Password">
+								<input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
 							</div>
 							<div class="checkbox pull-right">
 								<label>
-									<input type="checkbox">
+									<input type="checkbox" id="rememberMe">
 									Remember me </label>
 								</div>
-								<button type="submit" class="btn btn btn-primary">
+								<button type="submit" class="btn btn btn-primary" onclick="signup()">
 									Sign Up
 								</button>
 							</form>

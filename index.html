@@ -32,6 +32,10 @@
     <link href="/style.css" rel="stylesheet">
 
     <script type="text/javascript">
+
+    	var storage = undefined;
+    	var user = undefined;
+
         function myrand(x, y) {
             return Math.floor(Math.random() * y) + x;
         }
@@ -101,6 +105,8 @@
             google.maps.event.addListener(map, 'click', function(event) {
                 placeMarker(event.latLng);
             });
+
+            window.location = "login.html";
         }
 
         function placeMarker(location) {
@@ -120,6 +126,22 @@
         }
 
         function loadScript() {
+        	if(!sessionStorage.user || !localStorage.user) {
+        		window.location.href = "login.html";
+        	}
+
+        	if(sessionStorage.user) {
+        		storage = sessionStorage;
+        	}
+        	else
+        	{
+        		storage = localStorage;
+        	}
+
+        	user = storage['user'];
+
+        	$("#userName").text(user.first_name + " " + user.last_name + " " + user.upvotes);
+
             hidelegend();
             var script = document.createElement('script');
             script.type = 'text/javascript';
@@ -269,7 +291,7 @@
 
                     <ul class="nav navbar-nav pull-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Iordache Catalin  46<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span><strong class="caret"></strong></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> <span id="userName"> </span> <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span><strong class="caret"></strong></a>
                             <ul class="dropdown-menu">
 
                                 <li>
