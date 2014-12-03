@@ -1,3 +1,42 @@
+README
+
+PROIECT INTERACTIUNEA OM-CALCULATOR
+ECHIPA: TALENT
+MEMBRII ECHIPA: Dragan Dan-Stefan
+		    Iordache Catalin
+		    Usurelu Catalin Constantin
+
+Implementare front-end
+
+	Partea de front-end a fost implementata cu ajutorul HTML si bootstrap:
+
+	Pentru inceput am facut pagina principala: index.html. Mai intai am organizat pagina
+	cu ajutorul grid-ului definit in bootstrap. Apoi au urmat:
+		- bara de navigatie (bootstrap: navbar) care contine titlul proiectului, buton de homepage (index.html)
+		  form de cautare si buton de declansare a cautarii si numele utilizatorului alaturi de rating-ul acestuia.
+		  Totodata la apasarea pe numele utilizatorului se declanseaza un dropdown care permite prin alte doua
+		  butoane accesarea contului sau sign-out.
+		- butoanele de creeare a evenimentelor in functie de tipul acestuia: masina, trotuar sau alee inzapezita.
+		  La actionarea unuia dintre acestea se apeleaza un element bootstrap modal, care permite completearea
+		  unor informatii: Titlul proiectului, un mesaj, adaugarea unei fotografii, check-in (google-maps) si postarea.
+		- mapa google, care indica locatia ip-ului si evenimentele din jur, cu ajutorul google-map-canvas.
+		- in partea dreapta apar doua panouri (bootstrap: panel), unul care indica clasamentul user-ilor si altor clasamentul
+		   evenimentelor.
+		 - in josul paginii a fost construit un alt panou, care lucreaza ca o consola unde vor aparea evenimentele noi create
+		   din vecinatate.
+
+	Pagina evenimentului (event.html) : care contine informatiile despre eveniment, alaturi de statusul acestuia - In progress/Done.
+	Totodata au fost construite 3 butoane: rate +1, rate -1 si attend. In partea dreapta se afla un panou cu persoanele care participa
+	la acest eveniment.
+
+	Pagina userului (user.html): Contine informatiile despre user alaturi de doua butoane care permit aprecierea sau nu a userului.
+	In partea dreapta sa afla doua panouri care indica evenimentele create de user si evenimentele la care participa.
+
+	Pagina de signup (signup.html) si pagina de login (login.html) permit logarea sau inscrierea pe site. Informatiile sunt pastrare
+	in baza de date.
+
+
+	Designul a fost facut cu ajutorul css, iar toata implementarea se gaseste in fisierul style.css.
 
 Implementare back-end
 
@@ -39,7 +78,7 @@ Implementare back-end
 		- /users -> suporta crearea unui nou user (POST) + listarea tuturor
 		            userilor (GET).
 		- /events -> suporta crearea unui nou event (POST) + listarea tuturor
-		             eventurilor (GET). 
+		             eventurilor (GET).
 
 		- /close_event/<int:event_id> -> marcheaza un event ca fiind terminat;
 										 se foloseste metoda POST fara niciun
@@ -65,7 +104,7 @@ Implementare back-end
 		}
 
 		Event:
-		{	
+		{
 			"name": "New event",
 			"latitude": 45.32,
 			"longitude": 23.33,
