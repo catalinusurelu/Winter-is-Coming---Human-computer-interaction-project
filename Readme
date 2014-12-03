@@ -1,0 +1,131 @@
+
+Implementare back-end
+
+	Partea de back-end este reprezentarea de servicii REST + un web server
+	NodeJS realizat folosind frameworkul Express pentru fisiere statice (HTML,
+	JavaScript, imagini etc.).
+
+	Tehnologii principale folosite de serviciile REST:
+		- Python.
+		- Flask.
+		- SQLAlchemy drept ORM + folosirea unei baze de date SQLite.
+
+
+	Tabelele din baza de date (schema):
+		1) User:
+			id = db.Column(db.Integer, primary_key=True)
+			first_name = db.Column(db.String(127), index=True)
+			last_name = db.Column(db.String(127), index=True)
+			email = db.Column(db.String(127), index=True, unique=True)
+			upvotes = db.Column(db.Integer, index=True)
+			password = db.Column(db.String(32))
+			image_url = db.Column(db.String(1024))
+			attending = "events associated with the user"
+
+		2) Event:
+			id = db.Column(db.Integer, primary_key=True)
+			name = db.Column(db.String(127), index=True)
+			latitude = db.Column(db.Float, index=True)
+			longitude = db.Column(db.Float, index=True)
+			upvotes = db.Column(db.Integer, index=True)
+			event_type = db.Column(db.String(32))
+			event_status = db.Column(db.String(32))
+			image_url = db.Column(db.String(1024))
+			create_date = db.Column(db.DateTime)
+			creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+	Endpointurile pentru serviciile REST (pot fi accessate cu root-ul
+	http://128.199.38.110:5000/):
+		- /users -> suporta crearea unui nou user (POST) + listarea tuturor
+		            userilor (GET).
+		- /events -> suporta crearea unui nou event (POST) + listarea tuturor
+		             eventurilor (GET). 
+
+		- /close_event/<int:event_id> -> marcheaza un event ca fiind terminat;
+										 se foloseste metoda POST fara niciun
+										 continut (acesta va fi ignorat).
+		- /users/<int:user_id>/events -> listarea (GET) tutoror evenimentul
+		                                 pe carea user-ul identificat prin
+		                                 user_id le-a deschis sau la care a
+		                                 participat.
+		- /top_events -> listeaza (GET) evenimentele ordonate dupa numarul de
+		                  upvote-uri.
+		- /to_users -> listeaza (GET) userii ordonati dupa numarul de
+		                  upvote-uri.
+
+
+		Exemple de JSON-uri care reprezinta useri si evenimente:
+		User:
+		{
+			"first_name": "Ion",
+			"last_name": "Andrei",
+			"email": "yo@me2",
+			"upvotes": 23,
+			"password": "111"
+		}
+
+		Event:
+		{	
+			"name": "New event",
+			"latitude": 45.32,
+			"longitude": 23.33,
+			"upvotes": 33,
+			"event_type" : "street",
+			"event_status" : "started",
+			"creator_id": 1
+		}
+
+		Aceste JSON-uri pot fi folosite impreuna cu un client REST (extensia
+		Postman pentru Google Chrome) + apeluri POST pentru a crea evenimente,
+		useri noi.
+
+		Atentie! Toate request-urile trebuie sa contina header-ul html
+		content-type: application/json.
+
+		De asemenea toate requesturile se fac Cross-Origin deci exista
+		un risc implicit de securitate!
+
+		Exemplu POST:
+
+		endpoint -> http://128.199.38.110:5000/users
+		Content-Type: application/json
+
+		Contents:
+		{
+			"first_name": "Ion",
+			"last_name": "Andrei",
+			"email": "yo@me2",
+			"upvotes": 23,
+			"password": "111"
+		}
+
+	Legare front-end <--> back-end:
+		Aceasta se realizeaza folosind apeluri AJAX prin JQuery si de asemenea
+	este folosit AngularJS pentru afisarea dinamica a listelor de useri,
+	evenimente etc.
+
+Totul ar trebui sa functioneze out of the box, dar in caz ca se doreste
+reinstalarea pachetelor python folosite, urmati pasii:
+
+Install python3 if not already included in your distribution
+
+sudo apt-get install python-virtualenv
+alias python=python3
+sudo virtualenv flask -p python
+sudo su
+flask/bin/pip install flask
+flask/bin/pip install flask-login
+flask/bin/pip install flask-openid
+flask/bin/pip install flask-mail
+flask/bin/pip install flask-sqlalchemy
+flask/bin/pip install sqlalchemy-migrate
+flask/bin/pip install flask-whooshalchemy
+flask/bin/pip install flask-wtf
+flask/bin/pip install flask-babel
+flask/bin/pip install guess_language
+flask/bin/pip install flipflop
+flask/bin/pip install coverage
+flask/bin/pip install -U flask-cors
+
+De asemenea pentru NodeJS express:
+	npm install -g express
