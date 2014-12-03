@@ -19,11 +19,88 @@
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
 
 		<script>
-			function change() {
-				document.getElementById("inputUsernameEmail").placeholder = sessionStorage.username;
-			}
+			
+			function signin() {
+				var storage = undefined;
+				if($("#rememberMe").prop("checked")) {
+					storage = localStorage;
+				}
+				else {
+					storage = sessionStorage;
+				}
 
-			window.onload = change;
+				var user = new Object();
+
+				user.email = $("#email").val();
+				user.password = $("#password").val();
+
+				if(user.email == "" || user.password == "") {
+					ajaxFailed("Please fill out all fields!");
+					return;
+				}
+
+				var request = $.ajax({
+	                url: "http://128.199.38.110:5000/users",
+	                type: "GET",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                cache: false,
+	                timeout: 10000,
+	                processData: false,
+	            });
+
+	            request.done(function(users) {
+	                var usersList = $.parseJSON(users);
+	                var found = false;
+	                for(var i = 0; i < usersList.length; i++) {
+	                	if(usersList[i].email == user.email) {
+	                		found = true;
+	                		if(usersList[i].password == user.password) {
+	                			user = usersList[i];
+	                			user.password = "";
+	                			storage.user = JSON.stringify(user);
+			        			window.location.href = "index.html";
+	                		}
+	                		else
+	                		{
+	                			ajaxFailed("Invalid passsword, please try again!");
+								return;
+	                		}
+	                	}
+	                }
+	                // Mai ajunge si pe aici pana face redirectul :(
+	                if(!found) {
+	                	ajaxFailed("User not found, please try again!");
+	                }
+	                
+
+	            });
+
+			       
+		        request.fail(function() {
+		        	ajaxFailed("Something went horribly wrong with your request, please try again later!");
+		        });
+
+				function ajaxFailed(message) {
+
+				    $("#LogInTitle").
+				    append($("<div/>", {
+				        class: "row",
+				        id: "removeFailedMessage",
+				        style: "margin-top:10px;margin-bottom:10px;text-align:center"
+				    }).append($("<div/>", {
+				        class: "alert alert-danger",
+				        role: "alert",
+				        style: "margin-bottom:0px"
+				    }).append("<strong>" + message)))
+
+				    window.setTimeout(function() {
+				        $("#removeFailedMessage").fadeTo(2000, 0).slideUp(2000, function() {
+				            $(this).remove();
+				        });
+				    }, 3000);
+				}
+			}
 		</script>
 
 
@@ -83,27 +160,29 @@
 
 					<div class="main">
 
-						<h3>Please Log In, or <a href="signup.html">Sign Up</a></h3>
+						<div id='LogInTitle'>  <h3>Please Log In, or <a href="signup.html">Sign Up</a></h3> </div>
 						<div class="login-or">
 							<hr >
 						</div>
 
 						<form role="form">
 							<div class="form-group">
-								<input type="text" class="form-control" id="inputUsernameEmail" placeholder=sessionStorage.username>
+								<input type="text" class="form-control" id="email" placeholder=sessionStorage.username>
 							</div>
 							<div class="form-group">
-								<input type="password" class="form-control" id="inputPassword" placeholder="Password">
+								<input type="password" class="form-control" id="password" placeholder="Password">
 							</div>
 							<div class="checkbox pull-right">
 								<label>
 									<input type="checkbox">
-									Remember me </label>
-								</div>
-								<button type="submit" class="btn btn btn-primary">
+									Remember me 
+								</label>
+							</div>
+						</form>
+
+						<button type="submit" class="btn btn btn-primary" onclick="signin()">
 									Log In
-								</button>
-							</form>
+						</button>
 
 						</div>
 
