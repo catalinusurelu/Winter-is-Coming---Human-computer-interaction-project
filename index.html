@@ -246,21 +246,22 @@
                     </div>
                 </div>
 
-                <div class="row col-sm-12 spacer">
-                    <div class=" col-sm-6">
+                <div class="row col-sm-12 spacer2">
+                    <div class=" col-sm-4">
                         <button class="btn btn-success btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-up"></span> +1 </button>
                     </div>
-                    <div class=" col-sm-6">
+                    <div class=" col-sm-4">
                         <button class="btn btn-danger btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-down"></span> -1 </button>
+                    </div>
+                    <div class=" col-sm-4">
+                        <button class="btn btn-info btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
                     </div>
 
                 </div>
             </div>
         </div>
-
-
-
     </div>
+
     <div class="container" id="main">
 
         <!-- Navigation bar -->
@@ -489,6 +490,7 @@
 
             <!-- map-->
             <div class="row col-sm-9">
+            <h4><span class="glyphicon glyphicon-map-marker"></span> Your Location<small> Events near you</small></h4>
                 <div class="col-sm-9">
                     <div class="google-map-canvas" id="map-canvas">
                     </div>
@@ -533,7 +535,7 @@
 
         <!-- Events near you -->
         <div class="row col-sm-12">
-            <h4><span class="glyphicon glyphicon-map-marker"></span> Your Location<small> Events near you</small></h4>
+
             <div ng-app="nearbyEventsApp" id="nearbyEventsApp" class="panel panel-default">
                 <div class="panel-heading"></div>
                 <div ng-controller="nearbyEventsController" style=" height: 100px; overflow-y:auto !important;" class="	panel-body panel-height">

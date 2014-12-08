@@ -2221,6 +2221,9 @@
  .spacer {
  	margin-top: 100px; /* define margin as you see fit */
  }
+  .spacer2 {
+ 	margin-top: 130px; /* define margin as you see fit */
+ }
 
  .yellow {
  	color: #FFFF00;
