@@ -9,6 +9,10 @@
         }
     </style>
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+    <script type="text/javascript" src="userRequest.js">
+    </script>
+
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>Winter is comming</title>
 
@@ -510,7 +514,7 @@
                     <h3 class="panel-title"><b>Top Users</b></h3>
                 </div>
                 <div ng-controller="topUsersController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
-                    <p ng-repeat="x in top_users"> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </p>
+                    <p ng-repeat="x in top_users"> <a href="user.html" onclick="saveUser(this)">{{ x.upvotes }}<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span>{{ x.first_name + " " + x.last_name }}</a></p>
 
 
                 </div>
@@ -523,8 +527,7 @@
                     <h3 class="panel-title"><b>Top Events</b></h3>
                 </div>
                 <div ng-controller="topEventsController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
-                    <p ng-repeat="x in top_events">
-                        {{ x.upvotes }} <a href="#"><span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.name }} </p>
+                    <p ng-repeat="x in top_events"><a href="event.html" onclick="saveEvent(this)">{{ x.upvotes }}<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> {{ x.name }} </a></p>
 
                 </div>
             </div>
@@ -539,8 +542,7 @@
             <div ng-app="nearbyEventsApp" id="nearbyEventsApp" class="panel panel-default">
                 <div class="panel-heading"></div>
                 <div ng-controller="nearbyEventsController" style=" height: 100px; overflow-y:auto !important;" class="	panel-body panel-height">
-                    <p ng-repeat="x in nearby_events">
-                        {{ x.upvotes }} <a href="#"><span style="color:#FF0040;" class="glyphicon glyphicon-star"></span> </a> {{ x.name }} </p>
+                    <p ng-repeat="x in nearby_events"><a href="event.html" onclick="saveEvent(this)">{{ x.upvotes }}<span style="color:#FF0040;" class="glyphicon glyphicon-star"></span> {{ x.name }} </a></p>
                 </div>
             </div>
         </div>

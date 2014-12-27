@@ -4,6 +4,11 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title>Event</title>
 
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+  <script type="text/javascript" src="userRequest.js">
+  </script>
+  </script>
+
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
@@ -20,7 +25,7 @@
 
 </head>
 
-<body>
+<body onload="eventRequest()">
 
 	<div class="container" id="main">
 
@@ -73,12 +78,12 @@
 
 			<div class="col-sm-9">
 				<div class="col-sm-9">
-					<h2>Deszapezire masini P5-P6</h2>
+					<h2><span id="event_name"></span></h2>
 					<p><strong><span class="glyphicon glyphicon glyphicon-user"></span> Initiator: </strong> Iordache Catalin </p>
 					<p><strong><span class="glyphicon glyphicon-map-marker"></span> Location: </strong> Bucharest </p>
 					<p><strong><span class="glyphicon glyphicon glyphicon-pencil"></span> Description: </strong> Mesajul introdus in textbox-ul din butoane </p>
-					<p><strong><span class="glyphicon glyphicon glyphicon-asterisk"></span>  Status: </strong> <a href="#" role="button" class="btn btn-warning">In progress / DONE</a> </p>
-					<p><strong><span class="glyphicon glyphicon glyphicon-star-empty"></span> Rating: </strong><strong style="font-size:26px;"> 12 </strong> <span style="color:#F7BE81; font-size:26px;" class="glyphicon glyphicon-star"></span>
+					<p><strong><span class="glyphicon glyphicon glyphicon-asterisk"></span>  Status: </strong> <a href="#" role="button" class="btn btn-warning"><span id="status"></span></a> </p>
+					<p><strong><span class="glyphicon glyphicon glyphicon-star-empty"></span> Rating: </strong><strong style="font-size:26px;"><span id="Rating"></span></strong> <span style="color:#F7BE81; font-size:26px;" class="glyphicon glyphicon-star"></span>
 					</p>
 					<p><small>Evaluate this event:</small></p>
 
@@ -132,7 +137,7 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"></div>
 				<div div style=" height: 100px; overflow-y:auto !important;" class="panel-body panel-height">
-					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> Deszapezire trotuare Regie P15-P16-P17 </a></p>
+					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span>Deszapezire trotuare Regie P15-P16-P17 </a></p>
 					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
 					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
 					<p><a href="#"><span style="color:#FF0040; " class="glyphicon glyphicon-star"></span> </a></p>
