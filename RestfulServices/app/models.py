@@ -61,9 +61,9 @@ class Event(db.Model):
 
 class UserEventsLink(db.Model):
     __tablename__ = "user_events_link"
-    user_id = db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    user_id = db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
     event_id = db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True)
-    upvoted = event_id = db.Column('upvoted', db.Boolean, default = False)
+    upvoted = db.Column('upvoted', db.Boolean, default = False)
     user = db.relationship(User, backref=db.backref("user_assoc"))
     event = db.relationship(Event, backref=db.backref("event_assoc"))
 
