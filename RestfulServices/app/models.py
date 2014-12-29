@@ -2,11 +2,10 @@ from hashlib import md5
 from app import db
 
 
-events = db.Table(
-	'users_events',
-	db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-	db.Column('event_id', db.Integer, db.ForeignKey('event.id'))
-)
+class UserEventsLink(db.Model):
+	__tablename__ = "user_events_link"
+	user_id = db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+	event_id = db.Column('event_id', db.Integer, db.ForeignKey('event.id'))
 
 
 class User(db.Model):
@@ -21,7 +20,7 @@ class User(db.Model):
 	tokens = db.relationship('Token', backref='owner', lazy='dynamic')
 
 	attending = db.relationship('Event',
-	                           secondary=events,
+	                           secondary=user_events_link,
 	                           backref=db.backref('participants', lazy='dynamic'),
 	                           lazy='dynamic')
 
