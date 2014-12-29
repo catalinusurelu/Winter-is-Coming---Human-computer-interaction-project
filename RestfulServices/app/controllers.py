@@ -149,7 +149,7 @@ def user_events(user_id):
 
 @app.route('/events/<int:event_id>/users', methods=['GET', 'POST', "DELETE", 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', "DELETE", 'OPTIONS'], headers=['Content-Type'])
-def event_participants(user_id):
+def event_participants(event_id):
     event = Event.query.get(event_id)
 
     if(event is None):
@@ -183,7 +183,7 @@ def event_participants(user_id):
 
 
 
-@app.route('/top_events', methods=['GET', 'OPTIONS'])
+@app.route('/top_events/', methods=['GET', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
 def top_events():
     app.logger.info("Top events request")
