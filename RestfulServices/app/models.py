@@ -13,9 +13,10 @@ class User(db.Model):
 
     tokens = db.relationship('Token', backref='owner', lazy='dynamic')
 
+    # Note to self: We also say that the backref is dynamic so we can query with the backref from the other side.
     attending = db.relationship('Event',
                                secondary='user_events_link',
-                               backref=db.backref('participants', lazy='dynamic'),
+                               backref=db.backref('participants', lazy='dynamic'), 
                                lazy='dynamic')
 
     def to_dict(self):
@@ -63,7 +64,7 @@ class UserEventsLink(db.Model):
     __tablename__ = "user_events_link"
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
     event_id = db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True)
-    upvoted = db.Column('upvoted', db.Boolean, default = False)
+    vote = db.Column('upvoted', db.Integer, default = 0)
     user = db.relationship(User, backref=db.backref("user_assoc"))
     event = db.relationship(Event, backref=db.backref("event_assoc"))
 

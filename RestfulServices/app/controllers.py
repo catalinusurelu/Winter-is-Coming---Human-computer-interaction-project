@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from datetime import datetime
 from app import app, db
-from .models import User, Event
+from .models import User, Event, UserEventsLink
 
 import random
 from random import randint
@@ -106,12 +106,43 @@ def events():
 @app.route('/close_event/<int:event_id>', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['Content-Type'])
 def close_event(event_id):
-        event = Event.query.get(event_id)
-        event.event_status = 'closed'
-        db.session.add(event)
+    event = Event.query.get(event_id)
+    event.event_status = 'closed'
+    db.session.add(event)
+    db.session.commit()
+
+    return "POST Echo\n" + str(event.to_dict)
+
+@app.route('/users/<int:user_id>/events/<int:event_id>/upvote', methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['Content-Type'])
+def upvote_event(user_id, event_id):
+    usersEventsLink = UserEventsLink.query.filter(UserEventsLink.vote <= 0,
+                                                  UserEventsLink.user_id == user_id,
+                                                  UserEventsLink.event_id == event_id).first()
+
+    if usersEventsLink is not None:
+        usersEventsLink.vote = usersEventsLink.vote + 1
+        usersEventsLink.event.upvotes = usersEventsLink.event.upvotes + 1
+        db.session.add(usersEventsLink)
         db.session.commit()
 
-        return "POST Echo\n" + str(event.to_dict)
+    return "POST Echo\n"
+
+@app.route('/users/<int:user_id>/events/<int:event_id>/downvote', methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['Content-Type'])
+def downvote_event(user_id, event_id):
+    usersEventsLink = UserEventsLink.query.filter(UserEventsLink.vote >= 0,
+                                                  UserEventsLink.user_id == user_id,
+                                                  UserEventsLink.event_id == event_id).first()
+
+    if usersEventsLink is not None:
+        usersEventsLink.vote = usersEventsLink.vote - 1
+        usersEventsLink.event.upvotes = usersEventsLink.event.upvotes - 1
+        db.session.add(usersEventsLink)
+        db.session.commit()
+
+    return "POST Echo\n"
+
 
 @app.route('/users/<int:user_id>/events', methods=['GET', 'POST', "DELETE", 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', "DELETE", 'OPTIONS'], headers=['Content-Type'])
@@ -131,6 +162,7 @@ def user_events(user_id):
     elif(request.method == "POST"):
         jss = request.get_json()
         event = Event.query.get(jss['id'])
+        event.creator_id = user_id
 
         user.attending.append(event)
         db.session.add(user)
