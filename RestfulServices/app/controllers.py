@@ -147,6 +147,41 @@ def user_events(user_id):
 
         return "DELETE Echo\n" + str(jss)
 
+@app.route('/events/<int:event_id>/users', methods=['GET', 'POST', "DELETE", 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'POST', "DELETE", 'OPTIONS'], headers=['Content-Type'])
+def event_participants(user_id):
+    event = Event.query.get(event_id)
+
+    if(event is None):
+        return "No event", 404
+
+    if(request.method == "GET"):
+        participant_list = []
+        if(event.participants is not None):
+            for x in event.participants:
+                participant_list.append(x.to_dict())
+            
+        return json.dumps(participant_list, sort_keys=True, indent=4, separators=(',', ': '))
+    elif(request.method == "POST"):
+        jss = request.get_json()
+        user = User.query.get(jss['id'])
+
+        event.participants.append(user)
+        db.session.add(event)
+        db.session.commit()
+
+        return "POST Echo\n" + str(jss)
+    else:
+        jss = request.get_json()
+        user = User.query.get(jss['id'])
+
+        event.participants.remove(user)
+        db.session.add(event)
+        db.session.commit()
+
+        return "DELETE Echo\n" + str(jss)
+
+
 
 @app.route('/top_events', methods=['GET', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
