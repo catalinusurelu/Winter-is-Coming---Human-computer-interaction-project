@@ -6,7 +6,7 @@ class UserEventsLink(db.Model):
 	__tablename__ = "user_events_link"
 	user_id = db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
 	event_id = db.Column('event_id', db.Integer, db.ForeignKey('event.id'), primary_key=True)
-	upvoted = event_id = db.Column('upvoted', db.Boolean, default = false)
+	upvoted = event_id = db.Column('upvoted', db.Boolean, default = False)
 
 
 class User(db.Model):
