@@ -39,10 +39,31 @@
     	var modalLat;
     	var modalLng;
 
+    	var currentLatitude;
+    	var currentLongitude;
+
     	var storage = undefined;
     	var user = undefined;
 
     	var placedModalMarker = null;
+
+
+    	// Load session.
+    	if(!sessionStorage.user && !localStorage.user) {
+        		window.location.href = "login.html";
+        }
+
+    	if(sessionStorage.user) {
+    		storage = sessionStorage;
+    	}
+    	else
+    	{
+    		storage = localStorage;
+    	}
+
+    	user = $.parseJSON(storage['user']);
+
+
 
         function myrand(x, y) {
             return Math.floor(Math.random() * y) + x;
@@ -58,54 +79,84 @@
             elem.style.display = 'none';
         }
 
+		var dfd = new jQuery.Deferred();
+        var dfd2 = new jQuery.Deferred();
+        
+
+
+			
+		if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(setCurrentPositionSuccess, setCurrentPositionFailure);
+	    } else { 
+	        setCurrentPositionFailure();
+	    }
+
+	    function setCurrentPositionSuccess(position) {
+		    currentLatitude =  position.coords.latitude;
+		    currentLongitude = position.coords.longitude;
+		    dfd.resolve();
+		    dfd2.resolve();
+		}
+
+		function setCurrentPositionFailure() {
+			currentLatitude =  44.438606;
+		    currentLongitude = 26.049492;
+		    dfd.resolve();
+		    dfd2.resolve();
+		}
+		
+		
+
 
         // Populate map events.
         function initialize() {
-            var center = new google.maps.LatLng(44.438606, 26.049492);
+        	$.when(dfd.promise()).then(function() {
+	            var center = new google.maps.LatLng(currentLatitude, currentLongitude);
 
-            var mapOptions = {
-                zoom: 15,
-                center: new google.maps.LatLng(44.438606, 26.049492)
-            };
+	            var mapOptions = {
+	                zoom: 15,
+	                center: center
+	            };
 
-            map = new google.maps.Map(document.getElementById('map-canvas'),
-                mapOptions);
+	            map = new google.maps.Map(document.getElementById('map-canvas'),
+	                mapOptions);
 
 
-            // Get stored event and place them on map.
-            var request = $.ajax({
-                url: "http://128.199.38.110:5000/top_events",
-                type: "GET",
-                conection: "keep-alive",
-                contentType: "application/json",
-                cache: false,
-                timeout: 10000,
-                processData: false,
-            });
+	            // Get stored event and place them on map.
+	            var request = $.ajax({
+	                url: "http://128.199.38.110:5000/top_events",
+	                type: "GET",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                cache: false,
+	                timeout: 10000,
+	                processData: false,
+	            });
 
-            request.done(function(top_events) {
-                var top_events = $.parseJSON(top_events);
+	            request.done(function(top_events) {
+	                var top_events = $.parseJSON(top_events);
 
-                for (var i = 0; i < top_events.length; i++) {
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(
-                            top_events[i].latitude,
-                            top_events[i].longitude),
-                        map: map,
-                        title: 'Marker id ' + top_events[i].id,
-                        event_id: top_events[i].id
-                    });
+	                for (var i = 0; i < top_events.length; i++) {
+	                    var marker = new google.maps.Marker({
+	                        position: new google.maps.LatLng(
+	                            top_events[i].latitude,
+	                            top_events[i].longitude),
+	                        map: map,
+	                        title: 'Marker id ' + top_events[i].id,
+	                        event_id: top_events[i].id
+	                    });
 
-                    google.maps.event.addListener(marker, 'click', function() {
-                        showlegend();
-                        map.controls[google.maps.ControlPosition.TOP_CENTER].push(
-                            document.getElementById('legend'));
-                    });
+	                    google.maps.event.addListener(marker, 'click', function() {
+	                        showlegend();
+	                        map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+	                            document.getElementById('legend'));
+	                    });
 
-                    google.maps.event.addListener(map, 'click', function() {
-                        hidelegend();
-                    });
-                }
+	                    google.maps.event.addListener(map, 'click', function() {
+	                        hidelegend();
+	                    });
+	                }
+	            });
             });
 
 
@@ -162,25 +213,11 @@
         }
 
         function loadScript() {
-        	if(!sessionStorage.user && !localStorage.user) {
-        		window.location.href = "login.html";
-        	}
-
-        	if(sessionStorage.user) {
-        		storage = sessionStorage;
-        	}
-        	else
-        	{
-        		storage = localStorage;
-        	}
-
-        	user = $.parseJSON(storage['user']);
 
         	$("#userName").text(user.first_name + " " + user.last_name + " " + user.upvotes);
 
         	// Update all form (for event type modals) actions.
         	$('.modal form').attr('action', 'http://128.199.38.110:5000/users/' + user.id + '/events');
-
 
             hidelegend();
             var script = document.createElement('script');
@@ -188,6 +225,12 @@
             script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
                 'callback=initialize';
             document.body.appendChild(script);
+
+
+            // They must be set after the document loads, otherwise there won't be any elements to get.
+            // It seems the first app is loaded by default, se we load the other two.
+            angular.bootstrap(document.getElementById("topEventsApp"), ['topEventsApp']);
+            angular.bootstrap(document.getElementById("nearbyEventsApp"), ['nearbyEventsApp']);
 
         }
 
@@ -226,21 +269,24 @@
         }
 
         function nearbyEventsController($scope) {
-            var request = $.ajax({
-                url: "http://128.199.38.110:5000/top_events",
-                type: "GET",
-                conection: "keep-alive",
-                contentType: "application/json",
-                cache: false,
-                timeout: 10000,
-                data: "latitude=44.438&longitude=26.049&radius=0.00001",
-                processData: false,
-            });
+        	$.when(dfd2.promise()).then(function() {
+        		var request = $.ajax({
+	                url: "http://128.199.38.110:5000/top_events",
+	                type: "GET",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                cache: false,
+	                timeout: 10000,
+	                data: "latitude=" + currentLatitude.toFixed(3) + "&longitude=" + currentLongitude.toFixed(3) + "&radius=0.00001", // 3 decimal places is aproximately 20-40 km
+	                processData: false,
+           		});
 
-            request.done(function(nearby_events) {
-                $scope.nearby_events = $.parseJSON(nearby_events);
-                $scope.$apply();
-            });
+	            request.done(function(nearby_events) {
+	                $scope.nearby_events = $.parseJSON(nearby_events);
+	                $scope.$apply();
+	            });
+        	});
+            
         }
 
         angular.module('topEventsApp', [])
@@ -251,11 +297,6 @@
 
         angular.module('nearbyEventsApp', [])
             .controller('nearbyEventsController', nearbyEventsController);
-
-        angular.element(document).ready(function() {
-            angular.bootstrap(document.getElementById("topEventsApp"), ['topEventsApp']);
-            angular.bootstrap(document.getElementById("nearbyEventsApp"), ['nearbyEventsApp']);
-        });
 
         window.onload = loadScript;
 
