@@ -80,7 +80,7 @@ def users():
         db.session.add(user)
         db.session.commit()
 
-        return "POST Echo\n" + str(jss)
+        return str(jss)
 
 @app.route('/events', methods=['GET', 'POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])

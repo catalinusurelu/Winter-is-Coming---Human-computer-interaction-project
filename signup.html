@@ -60,8 +60,9 @@
 	                aync: false
 		          });
 
-		        request.done(function() {
+		        request.done(function(echo) {
 		        	user.password = "";
+		        	user.id = $.parseJSON(echo).id;
 		        	storage.user = JSON.stringify(user);
 
 		        	window.location.href = "index.html";

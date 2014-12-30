@@ -13,7 +13,6 @@
     <script type="text/javascript" src="userRequest.js">
     </script>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Winter is comming</title>
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
@@ -33,12 +32,20 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <!-- Custom CSS -->
-    <link href="/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="fileButtonStyle.css" type="text/css">
+    
 
     <script type="text/javascript">
+    	var map;
+
+    	var modalLat;
+    	var modalLng;
 
     	var storage = undefined;
     	var user = undefined;
+
+    	var placedModalMarker = null;
 
         function myrand(x, y) {
             return Math.floor(Math.random() * y) + x;
@@ -64,7 +71,7 @@
                 center: new google.maps.LatLng(44.438606, 26.049492)
             };
 
-            var map = new google.maps.Map(document.getElementById('map-canvas'),
+            map = new google.maps.Map(document.getElementById('map-canvas'),
                 mapOptions);
 
 
@@ -106,9 +113,9 @@
 
 
             // Add map event on mouse click.
-            google.maps.event.addListener(map, 'click', function(event) {
-                placeMarker(event.latLng);
-            });
+            //google.maps.event.addListener(map, 'click', function(event) {
+            //    placeMarker(event.latLng);
+            //});
         }
 
         function placeMarker(location) {
@@ -124,6 +131,36 @@
                 position: location,
                 map: map,
                 icon: image
+            });
+        }
+
+        function placeMarkerFromModal(id) {
+		    
+        	google.maps.event.addListener(map, 'click', function(event) {
+
+        		modalLat = event.latLng.lat();
+		    	modalLng = event.latLng.lng();
+
+                var marker = new google.maps.Marker({
+	                position: event.latLng,
+	                map: map
+           		});
+
+                // Previous event was not submited so we erase it from the map.
+                // The marker will also be erase on submit because of the page reload.
+                if(placedModalMarker != null) {
+                	placedModalMarker.setMap(null);
+                }
+
+                placedModalMarker = marker;
+
+                $("#" + id + " input[name=latitude]").val(modalLat);
+                $("#" + id + " input[name=longitude]").val(modalLng);
+                $("#" + id + " input[name=eventType]").val(id.substring(0, id.length - "Modal".length)); // chop off end of string.
+
+                google.maps.event.clearListeners(map, 'click');
+
+                $("#" + id).modal('show'); 
             });
         }
 
@@ -143,6 +180,9 @@
         	user = $.parseJSON(storage['user']);
 
         	$("#userName").text(user.first_name + " " + user.last_name + " " + user.upvotes);
+
+        	// Update all form (for event type modals) actions.
+        	$('.modal form').attr('action', 'http://128.199.38.110:5000/users/' + user.id + '/events');
 
             hidelegend();
             var script = document.createElement('script');
@@ -343,7 +383,11 @@
                                     <p><small class="text-muted"><span class="tags">hint:</span> o fotografie face cat o mie de cuvinte</small>
                                     </p>
 
-                                    <form class="form-horizontal">
+                                    <form class="form-horizontal" action="created from loading scrip!" method="POST" enctype="multipart/form-data">
+                                    	<input type="hidden" class="latitude" name="latitude" value="0" />
+                                    	<input type="hidden" class="longitude" name="longitude" value="0" />
+                                    	<input type="hidden" class="eventType" name="eventType" value="" />
+
                                         <div class="form-group">
                                             <label class="col-lg-2 control-label" for="inputName">Titlu</label>
                                             <div class="col-lg-10">
@@ -357,17 +401,21 @@
                                                 <textarea class="form-control" id="inputMessage" placeholder="Message" rows="3"></textarea>
                                             </div>
                                         </div>
+
+                                         <!-- modal-footer in modal-body? Heresy!!! -->
+                                        <div class="modal-footer">
+                                         	<span class="glyphicon glyphicon-picture btn btn-primary btn-file"> <input type="file" name="file"> </span>
+		                                   	<button class="btn btn-danger" data-dismiss="modal" type="button" onclick="placeMarkerFromModal('carModal')"><span class="glyphicon glyphicon-map-marker"></span> </button>
+		                                    <button class="btn btn-success" type="submit">Post</button>
+                                		</div>
+                                		 <!-- end modal-footer -->
+
                                     </form>
                                 </div>
                                 <!-- end modal-body -->
 
-                                <div class="modal-footer">
-                                    <button class="btn btn-primary" data-dismiss="modal" type="button"><span class="glyphicon glyphicon-picture"></span>
-                                        <button class="btn btn-danger" data-dismiss="modal" type="button"><span class="glyphicon glyphicon-map-marker"></span> </button>
-                                        <button class="btn btn-success " type="button">Post</button>
-
-                                </div>
-                                <!-- end modal-footer -->
+                                
+                               
 
                             </div>
                             <!-- end modal-content -->
