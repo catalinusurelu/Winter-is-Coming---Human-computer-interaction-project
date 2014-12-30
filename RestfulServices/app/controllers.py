@@ -15,6 +15,8 @@ from functools import update_wrapper
 
 from sqlalchemy import or_
 
+from config import basedir
+
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
                 automatic_options=True):
@@ -80,7 +82,10 @@ def users():
         db.session.add(user)
         db.session.commit()
 
-        return str(jss)
+        # Get user with id.
+        user = User.query.order_by(User.id.desc()).first()
+
+        return json.dumps(user.to_dict())
 
 @app.route('/events', methods=['GET', 'POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])
@@ -151,6 +156,46 @@ def user_events(user_id):
 
     if(user is None):
         return "No user", 404
+
+    # For multipart type we also create the event
+    h = request.headers
+    if h['Content-Type'] is not None and h['Content-Type'] == "multipart/form-data":
+        if request.method == 'POST':
+            jss = {}
+            jss['event_type'] = request.form['eventType']
+            jss['latitude']= request.form['latitude']
+            jss['longitude']= request.form['longitude']
+            jss['name']= request.form['name']
+            jss['message']= request.form['message']
+            jss['create_date'] = datetime.now()
+            jss['event_status'] = 'started'
+            jss['creator_id'] = user_id
+
+            event = Event(**jss)
+            db.session.add(event)
+            db.session.commit()
+
+            # We need the event id so we can construct the image url.
+            # We also need the event so we can link it to the creator.
+            event = Event.query.order_by(Event.id.desc()).first()
+
+            file = request.files['file']
+            if file:
+                filename = "Event " + str(event.id) "." + os.path.splitext(file.filename)[1]
+                event.image_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+                # We store the image at the root of the site, so in a folder in ../RestfulServices
+                file.save(os.path.join(basedir,'..', event.image_url)
+
+            user.attending.append(event)
+            db.session.add(user)
+            db.session.commit()
+
+    if h['Content-Type'] is not None and h['Content-Type'] != "application/json":
+            return "Invalid content type: " + h['Content-Type']
+
+    if h['Content-Type'] is None
+        return "Content-type is mandatory"
 
     if(request.method == "GET"):
         event_list = []

@@ -34,9 +34,10 @@ class User(db.Model):
 class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(127), index=True)
+    message = db.Column(db.String(4096), index=True)
     latitude = db.Column(db.Float, index=True)
     longitude = db.Column(db.Float, index=True)
-    upvotes = db.Column(db.Integer, index=True)
+    upvotes = db.Column(db.Integer, index=True, default = 0)
     event_type = db.Column(db.String(32))
     event_status = db.Column(db.String(32))
     image_url = db.Column(db.String(1024))
@@ -50,6 +51,7 @@ class Event(db.Model):
         dictionary = {}
         dictionary['id'] = self.id
         dictionary['name'] = self.name
+        dictionary['message'] = self.message
         dictionary['latitude'] = self.latitude
         dictionary['longitude'] = self.longitude
         dictionary['upvotes'] = self.upvotes
