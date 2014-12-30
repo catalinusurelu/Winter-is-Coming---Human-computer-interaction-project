@@ -286,8 +286,8 @@ def top_events():
             radius = float(radius)
             
             events = Event.query.filter(Event.event_status == "started", 
-                or_(Event.latitude - latitude < radius, Event.latitude - latitude < -radius),
-                or_(Event.longitude - longitude < radius, Event.longitude - longitude < -radius)).order_by(desc(Event.upvotes)).all()
+                or_(Event.latitude - latitude < radius, Event.latitude - latitude > -radius),
+                or_(Event.longitude - longitude < radius, Event.longitude - longitude > -radius)).order_by(desc(Event.upvotes)).all()
     else:
         events = Event.query.filter(Event.event_status == "started").order_by(desc(Event.upvotes)).all()
     event_list = []
