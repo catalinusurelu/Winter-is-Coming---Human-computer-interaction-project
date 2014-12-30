@@ -50,8 +50,7 @@
 
     	// Load session.
     	// Strangely if I assign user = null, user is seen as string ?
-    	if(!sessionStorage.user && !localStorage.user ||
-    		sessionStorage.user == "null" && localStorage.user == "null") {
+    	if((!sessionStorage.user || sessionStorage.user == "null") && (!localStorage.user || localStorage.user == "null")) {
         		window.location.href = "login.html";
         }
 
@@ -103,14 +102,12 @@
 		    currentLatitude =  position.coords.latitude;
 		    currentLongitude = position.coords.longitude;
 		    dfd.resolve();
-		    dfd2.resolve();
 		}
 
 		function setCurrentPositionFailure() {
 			currentLatitude =  44.438606;
 		    currentLongitude = 26.049492;
 		    dfd.resolve();
-		    dfd2.resolve();
 		}
 		
 		
@@ -165,6 +162,8 @@
 	                    });
 	                }
 	            });
+				// Better to chain events ... otherwise I think we can have conflicts?
+				dfd2.resolve();
             });
 
 
@@ -285,7 +284,7 @@
 	                contentType: "application/json",
 	                cache: false,
 	                timeout: 10000,
-	                data: "latitude=" + currentLatitude.toFixed(3) + "&longitude=" + currentLongitude.toFixed(3) + "&radius=0.00001", // 3 decimal places is aproximately 20-40 km
+	                data: "latitude=" + currentLatitude+ "&longitude=" + currentLongitude+ "&radius=0.00001", // 3 decimal places is aproximately 20-40 km
 	                processData: false,
            		});
 
