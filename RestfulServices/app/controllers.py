@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, Response
 from datetime import datetime
 from app import app, db
 from .models import User, Event, UserEventsLink
@@ -16,6 +16,8 @@ from functools import update_wrapper
 from sqlalchemy import or_
 
 from config import basedir
+
+import os
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -159,7 +161,9 @@ def user_events(user_id):
 
     # For multipart type we also create the event
     h = request.headers
-    if h['Content-Type'] is not None and h['Content-Type'] == "multipart/form-data":
+
+    # conten type is of the form Invalid content type: multipart/form-data; boundary=----WebKitFormBoundaryaAQKqkPK9JMBmsuB
+    if h['Content-Type'] is not None and "multipart/form-data" in h['Content-Type']:
         if request.method == 'POST':
             jss = {}
             jss['event_type'] = request.form['eventType']
@@ -181,20 +185,27 @@ def user_events(user_id):
 
             file = request.files['file']
             if file:
-                filename = "Event " + str(event.id) "." + os.path.splitext(file.filename)[1]
+                filename = "Event_" + str(event.id) + os.path.splitext(file.filename)[1]
                 event.image_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
                 # We store the image at the root of the site, so in a folder in ../RestfulServices
-                file.save(os.path.join(basedir,'..', event.image_url)
+                if not os.path.exists(os.path.join(basedir,'..', app.config['UPLOAD_FOLDER'])):
+                    os.makedirs(os.path.join(basedir,'..', app.config['UPLOAD_FOLDER']))
+
+
+                file.save(os.path.join(basedir,'..', event.image_url))
 
             user.attending.append(event)
             db.session.add(user)
             db.session.commit()
 
+             # Workaround to prevent 'redirection'. Can't prevent redirection from javascript.
+            return redirect("http://" + app.config['HOST'] + "/index.html", code=302)
+
     if h['Content-Type'] is not None and h['Content-Type'] != "application/json":
             return "Invalid content type: " + h['Content-Type']
 
-    if h['Content-Type'] is None
+    if h['Content-Type'] is None:
         return "Content-type is mandatory"
 
     if(request.method == "GET"):
@@ -260,7 +271,7 @@ def event_participants(event_id):
 
 
 
-@app.route('/top_events/', methods=['GET', 'OPTIONS'])
+@app.route('/top_events', methods=['GET', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['Content-Type'])
 def top_events():
     app.logger.info("Top events request")
