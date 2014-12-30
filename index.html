@@ -49,7 +49,9 @@
 
 
     	// Load session.
-    	if(!sessionStorage.user && !localStorage.user) {
+    	// Strangely if I assign user = null, user is seen as string ?
+    	if(!sessionStorage.user && !localStorage.user ||
+    		sessionStorage.user == "null" && localStorage.user == "null") {
         		window.location.href = "login.html";
         }
 
@@ -62,6 +64,12 @@
     	}
 
     	user = $.parseJSON(storage['user']);
+
+    	function signout() {
+    		sessionStorage.user = null;
+    		localStorage.user = null;
+    		return true;
+    	}
 
 
 
@@ -384,7 +392,7 @@
                                 <li class="divider"></li>
 
                                 <li>
-                                    <a href="login.html"><span class="glyphicon glyphicon-off"></span> Sign out</a>
+                                    <a href="login.html" onclick="signout()"><span class="glyphicon glyphicon-off"></span> Sign out</a>
                                 </li>
                             </ul>
                         </li>
