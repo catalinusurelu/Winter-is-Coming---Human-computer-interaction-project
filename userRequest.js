@@ -36,6 +36,7 @@ function eventRequest() {
 	      url: event_url,
 	      success: function(data) {
             for (var i=0; i < data.length; i++) {
+                var description = data[i].message;
                 var name = data[i].name;
                 var rating = data[i].upvotes;
                 var status = data[i].event_status;
@@ -44,6 +45,7 @@ function eventRequest() {
                     $('#event_name').text(name);
                     $('#Rating').text(rating);
                     $('#status').text(status);
+                    $('#message').text(description);
                     var img = data[i].image_url;
                     if (img != null)
                         $('#image').attr("src", img);
