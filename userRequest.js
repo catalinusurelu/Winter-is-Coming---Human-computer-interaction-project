@@ -13,9 +13,11 @@ function userRequest() {
                 name += " " + data[i].last_name;
                 var rating = data[i].upvotes;
                 var text = rating + name;
+                var headername = name + " " + rating;
                 if(getCookie("user=") == text) {
                     $('#user_name').text(name);
                     $('#Rating').text(rating);
+                    $('#headername').text(headername);
                     var img = data[i].image_url;
                     if (img != null)
                         $('#image').attr("src", img);
