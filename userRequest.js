@@ -64,6 +64,8 @@ function eventRequest() {
                         usr += " ";
                         usr += users[j].last_name;
                         $('#initiator').text(usr);
+                        var headername = usr + " " + rating;
+                        $('#headername').text(headername);
                       }
                     }
                     var img = data[i].image_url;
