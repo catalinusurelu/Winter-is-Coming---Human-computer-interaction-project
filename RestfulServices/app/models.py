@@ -58,6 +58,7 @@ class Event(db.Model):
         dictionary['image_url'] = self.image_url
         dictionary['event_type'] = self.event_type
         dictionary['event_status'] = self.event_status
+        dictionary['creator_id'] = self.creator_id
 
         return dictionary
 
