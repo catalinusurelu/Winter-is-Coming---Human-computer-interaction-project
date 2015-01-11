@@ -29,6 +29,16 @@ function userRequest() {
 
 function eventRequest() {
     var event_url = "http://128.199.38.110:5000/events";
+    var user_url = "http://128.199.38.110:5000/users";
+    var users;
+    $.ajax({
+        type: "GET",
+	      dataType: "json",
+	      url: user_url,
+	      success: function(data1) {
+          users = data1;
+        }
+		});
 
     console.log(event_url);
 
@@ -48,6 +58,14 @@ function eventRequest() {
                     $('#Rating').text(rating);
                     $('#status').text(status);
                     $('#message').text(description);
+                    for(var j=0; j < users.length; j++) {
+                      if(data[i].creator_id == users[j].id) {
+                        var usr = users[j].first_name;
+                        usr += " ";
+                        usr += users[j].last_name;
+                        $('#initiator').text(usr);
+                      }
+                    }
                     var img = data[i].image_url;
                     if (img != null)
                         $('#image').attr("src", img);
