@@ -58,7 +58,13 @@ function eventRequest() {
 }
 
 function saveUser(val) {
+    console.log(val.text);
     document.cookie = "user=" + val.text + ";";
+}
+
+function saveHeadUser(txt) {
+    console.log(txt);
+    document.cookie = "user=" + txt + ";";
 }
 
 function saveEvent(val) {

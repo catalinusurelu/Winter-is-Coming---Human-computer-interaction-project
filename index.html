@@ -70,7 +70,12 @@
     		return true;
     	}
 
-
+      function profile() {
+        var txt = $.parseJSON(storage['user']).upvotes;
+        txt += $.parseJSON(storage['user']).first_name;
+        txt += " " + $.parseJSON(storage['user']).last_name;
+        saveHeadUser(txt);
+      }
 
         function myrand(x, y) {
             return Math.floor(Math.random() * y) + x;
@@ -385,7 +390,7 @@
                             <ul class="dropdown-menu">
 
                                 <li>
-                                    <a href="user.html"> Profile</a>
+                                    <a href="user.html" onclick="profile()"> Profile</a>
                                 </li>
 
                                 <li class="divider"></li>
