@@ -21,6 +21,7 @@ function userRequest() {
                     var img = data[i].image_url;
                     if (img != null)
                         $('#image').attr("src", img);
+                    attendedEventsRequest(data[i].id);
                     createdEventsRequest(data[i].id);
                 }
             }
@@ -96,8 +97,34 @@ function createdEventsRequest(creator_id) {
                     pg += name;
                     pg += "</a></p>";
                     $('#ecreated').append( pg );
-                    console.log(name);
                 }
+            }
+        }
+		});
+}
+
+function attendedEventsRequest(id) {
+    var event_url = "http://128.199.38.110:5000/users";
+    event_url += "/" + id;
+    event_url += "/events";
+
+    console.log(event_url);
+
+    $.ajax({
+        type: "GET",
+	      dataType: "json",
+	      url: event_url,
+	      success: function(data) {
+            for (var i=0; i < data.length; i++) {
+                var name = data[i].name;
+                var upvotes = data[i].upvotes;
+                var pg = "<p><a href=\"event.html\">";
+                pg += upvotes;
+                pg += "<span style=\"color:#F7BE81;\" class=\"glyphicon glyphicon-star\"></span>";
+                pg += name;
+                pg += "</a></p>";
+                $('#eattended').append( pg );
+                console.log(name);               
             }
         }
 		});
