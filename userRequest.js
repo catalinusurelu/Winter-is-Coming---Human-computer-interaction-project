@@ -112,7 +112,8 @@ function attendedEventsRequest(id) {
 
     $.ajax({
         type: "GET",
-	      dataType: "json",
+        dataType: "json",
+	      contentType: "application/json",
 	      url: event_url,
 	      success: function(data) {
             for (var i=0; i < data.length; i++) {
