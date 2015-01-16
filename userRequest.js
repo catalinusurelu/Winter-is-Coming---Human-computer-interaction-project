@@ -73,6 +73,7 @@ function eventRequest() {
                     var img = data[i].image_url;
                     if (img != null)
                         $('#image').attr("src", img);
+                    peopleAttend(name);
                 }
             }
         }
@@ -127,6 +128,48 @@ function attendedEventsRequest(id) {
                 $('#eattended').append( pg );
                 console.log(name);               
             }
+        }
+		});
+}
+
+function peopleAttend(eventName) {
+    var user_url = "http://128.199.38.110:5000/users";
+    $.ajax({
+        type: "GET",
+	      dataType: "json",
+        contentType: "application/json",
+	      url: user_url,
+	      success: function(data1) {
+          for(var i=0; i < data1.length; i++) {
+            var id = data1[i].id;
+            var event_url = "http://128.199.38.110:5000/users";
+            event_url += "/" + id;
+            event_url += "/events";
+            console.log(event_url);
+            var usr = data1[i];
+            $.ajax({
+              type: "GET",
+              dataType: "json",
+	            contentType: "application/json",
+	            url: event_url,
+	            success: function(data) {
+                for(var j=0; j<data.length; j++) {
+                  if(data[j].name == eventName) {
+                    var name = usr.first_name;
+                    name += " ";
+                    name += usr.last_name;
+                    var upvotes = usr.upvotes;
+                    var pg = "<p><a href=\"event.html\">";
+                    pg += upvotes;
+                    pg += "<span style=\"color:#F7BE81;\" class=\"glyphicon glyphicon-star\"></span>";
+                    pg += name;
+                    pg += "</a></p>";
+                    $('#pattended').append( pg );
+                  }
+                }
+              }
+		        });
+          } 
         }
 		});
 }
