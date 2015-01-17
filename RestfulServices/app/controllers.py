@@ -110,6 +110,22 @@ def events():
 
         return "POST Echo\n" + str(jss)
 
+@app.route('/events/<int:event_id>', methods=['GET', 'POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])
+def event_id(event_id):
+    event = Event.query.get(event_id)
+    if(request.method == "GET"):
+        return json.dumps(event.to_dict(), sort_keys=True, indent=4, separators=(',', ': '))
+    else:
+        jss = request.get_json()
+        jss['create_date'] = datetime.now()
+        jss['event_status'] = 'started'
+
+        event = Event(**jss)
+        db.session.commit()
+
+        return "POST Echo\n" + str(jss)
+
 @app.route('/close_event/<int:event_id>', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['Content-Type'])
 def close_event(event_id):
@@ -135,12 +151,12 @@ def upvote_event(user_id, event_id):
 
         return str(usersEventsLink.vote)
 
-    return "POST Echo\n"
+    return ""
 
 @app.route('/users/<int:user_id>/events/<int:event_id>/downvote', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['Content-Type'])
 def downvote_event(user_id, event_id):
-    usersEventsLink = UserEventsLink.query.filter(UserEventsLink.vote >= 0,
+    usersEventsLink = UserEventsLink.query.filter(UserEventsLink.vote > 0,
                                                   UserEventsLink.user_id == user_id,
                                                   UserEventsLink.event_id == event_id).first()
 
@@ -152,7 +168,7 @@ def downvote_event(user_id, event_id):
 
         return str(usersEventsLink.vote)
 
-    return "POST Echo\n"
+    return ""
 
 
 @app.route('/users/<int:user_id>/events', methods=['GET', 'POST', "DELETE", 'OPTIONS'])

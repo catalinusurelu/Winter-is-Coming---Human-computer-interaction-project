@@ -5,9 +5,8 @@
 	<title>Event</title>
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-  <script type="text/javascript" src="userRequest.js">
-  </script>
-  </script>
+  <script type="text/javascript" src="userRequest.js"></script>
+  <script type="text/javascript" src="storage.js"></script>
 
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -25,38 +24,44 @@
 
 	<script>
 		init_storage();
+		var user = $.parseJSON(storage.user);
+		var user_event = $.parseJSON(storage.event);
 
 		function upvote() {
 			var request = $.ajax({
-	                url: "http://128.199.38.110:5000/users" + user.id + "/events/" + event.id + "/upvote",
+	                url: "http://128.199.38.110:5000/users/" + user.id + "/events/" + user_event.id + "/upvote",
 	                type: "POST",
 	                conection: "keep-alive",
 	                contentType: "application/json",
 	                cache: false,
 	                timeout: 10000,
 	                processData: false,
-	                aync: false
 		    });
 
 	        request.done(function(rating) {
-	       		$("#Rating").html("" + rating);
+	        	if(rating) {
+	        		$("#Rating").html("" + rating);
+	        	}
+	       		
 	        });
 		}
 
 		function downvote() {
 			var request = $.ajax({
-	                url: "http://128.199.38.110:5000/users" + user.id + "/events/" + event.id + "/downvote",
+	                url: "http://128.199.38.110:5000/users/" + user.id + "/events/" + user_event.id + "/downvote",
 	                type: "POST",
 	                conection: "keep-alive",
 	                contentType: "application/json",
 	                cache: false,
 	                timeout: 10000,
 	                processData: false,
-	                aync: false
 		    });
 
 	        request.done(function(rating) {
-	       		$("#Rating").html("" + rating);
+	        	if(rating) {
+	        		$("#Rating").html("" + rating);
+	        	}
+	       		
 	        });
 		}
 

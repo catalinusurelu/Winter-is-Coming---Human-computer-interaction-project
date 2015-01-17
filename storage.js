@@ -1,5 +1,4 @@
 var storage = undefined;
-var user = undefined;
 	
 function init_storage() {
 
@@ -16,8 +15,6 @@ function init_storage() {
 	{
 		storage = localStorage;
 	}
-
-	user = $.parseJSON(storage['user']);
 }
 
 
