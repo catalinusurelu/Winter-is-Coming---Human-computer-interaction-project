@@ -133,6 +133,8 @@ def upvote_event(user_id, event_id):
         db.session.add(usersEventsLink)
         db.session.commit()
 
+        return str(usersEventsLink.vote)
+
     return "POST Echo\n"
 
 @app.route('/users/<int:user_id>/events/<int:event_id>/downvote', methods=['POST', 'OPTIONS'])
@@ -147,6 +149,8 @@ def downvote_event(user_id, event_id):
         usersEventsLink.event.upvotes = usersEventsLink.event.upvotes - 1
         db.session.add(usersEventsLink)
         db.session.commit()
+
+        return str(usersEventsLink.vote)
 
     return "POST Echo\n"
 

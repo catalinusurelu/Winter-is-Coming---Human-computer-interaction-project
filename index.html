@@ -10,8 +10,10 @@
     </style>
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <script type="text/javascript" src="userRequest.js">
-    </script>
+    <script type="text/javascript" src="storage.js"></script>
+    <script type="text/javascript" src="userRequest.js"></script>
+
+
 
     <title>Winter is comming</title>
 
@@ -42,27 +44,9 @@
     	var currentLatitude;
     	var currentLongitude;
 
-    	var storage = undefined;
-    	var user = undefined;
+        var placedModalMarker = null;
 
-    	var placedModalMarker = null;
-
-
-    	// Load session.
-    	// Strangely if I assign user = null, user is seen as string ?
-    	if((!sessionStorage.user || sessionStorage.user == "null") && (!localStorage.user || localStorage.user == "null")) {
-        		window.location.href = "login.html";
-        }
-
-    	if(sessionStorage.user) {
-    		storage = sessionStorage;
-    	}
-    	else
-    	{
-    		storage = localStorage;
-    	}
-
-    	user = $.parseJSON(storage['user']);
+    	init_storage();
 
     	function signout() {
     		sessionStorage.user = null;
@@ -94,9 +78,7 @@
 		var dfd = new jQuery.Deferred();
         var dfd2 = new jQuery.Deferred();
         
-
-
-			
+	
 		if (navigator.geolocation) {
 	        navigator.geolocation.getCurrentPosition(setCurrentPositionSuccess, setCurrentPositionFailure);
 	    } else { 
@@ -115,8 +97,7 @@
 		    dfd.resolve();
 		}
 		
-		
-
+	
 
         // Populate map events.
         function initialize() {
@@ -224,6 +205,26 @@
             });
         }
 
+        function saveEventAndRedirect(id, redirect) {
+
+             var request = $.ajax({
+                url: "http://128.199.38.110:5000/events/" + event_id,
+                type: "GET",
+                conection: "keep-alive",
+                contentType: "application/json",
+                cache: false,
+                timeout: 10000,
+                processData: false,
+                aync: false
+            });
+
+            request.done(function(echo) {
+                storage.event = $.parseJSON(echo);
+                 window.location.href = redirect;
+            });
+        }
+
+        // onload
         function loadScript() {
 
         	$("#userName").text(user.first_name + " " + user.last_name + " " + user.upvotes);
@@ -361,7 +362,7 @@
     <div class="container" id="main">
 
         <!-- Navigation bar -->
-        <div class="navbar navbar-fixed-top">
+        <div class="navbar navbar-fixed-top" id="myNavbar">
             <div class="container">
                 <button class="navbar-toggle" data-target=".navbar-responsive-collapse" data-toggle="collapse" type="button">
                     <span class="icon-bar"></span>
@@ -637,7 +638,13 @@
                     <h3 class="panel-title"><b>Top Events</b></h3>
                 </div>
                 <div ng-controller="topEventsController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
-                    <p ng-repeat="x in top_events"><a href="event.html" onclick="saveEvent(this)">{{ x.upvotes }}<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span>{{ x.name }}</a></p>
+                    <p ng-repeat="x in top_events">
+                        <div onclick="saveEventAndRedirect(x.id, 'event.html')">{
+                        { x.upvotes }}
+                            <span style="color:#F7BE81;" class="glyphicon glyphicon-star">
+                            </span>{{ x.name }}
+                        </div>
+                    </p>
 
                 </div>
             </div>
@@ -652,7 +659,7 @@
             <div ng-app="nearbyEventsApp" id="nearbyEventsApp" class="panel panel-default">
                 <div class="panel-heading"></div>
                 <div ng-controller="nearbyEventsController" style=" height: 100px; overflow-y:auto !important;" class="	panel-body panel-height">
-                    <p ng-repeat="x in nearby_events"><a href="event.html" onclick="saveEvent(this)">{{ x.upvotes }}<span style="color:#FF0040;" class="glyphicon glyphicon-star"></span> {{ x.name }} </a></p>
+                    <p ng-repeat="x in nearby_events"><a href="event.html" onclick="saveEventAndRedirect(x.id, 'event.html')">{{ x.upvotes }}<span style="color:#FF0040;" class="glyphicon glyphicon-star"></span> {{ x.name }} </a></p>
                 </div>
             </div>
         </div>
