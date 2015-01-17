@@ -54,7 +54,7 @@ function eventRequest() {
                 var name = data[i].name;
                 var rating = data[i].upvotes;
                 var status = data[i].event_status;
-                var text = rating + " " + name;
+                var text = rating + name;
                 if(getCookie("event=") == text) {
                     $('#event_name').text(name);
                     $('#Rating').text(rating);
@@ -92,7 +92,7 @@ function createdEventsRequest(creator_id) {
                 var name = data[i].name;
                 var upvotes = data[i].upvotes;
                 if(creator_id == data[i].creator_id) {
-                    var pg = "<p><a href=\"event.html\">";
+                    var pg = "<p><a href=\"event.html\" onclick=\"saveEvent(this)\">";
                     pg += upvotes;
                     pg += "<span style=\"color:#F7BE81;\" class=\"glyphicon glyphicon-star\"></span>";
                     pg += name;
@@ -120,7 +120,7 @@ function attendedEventsRequest(id) {
             for (var i=0; i < data.length; i++) {
                 var name = data[i].name;
                 var upvotes = data[i].upvotes;
-                var pg = "<p><a href=\"event.html\">";
+                var pg = "<p><a href=\"event.html\" onclick=\"saveEvent(this)\">";
                 pg += upvotes;
                 pg += "<span style=\"color:#F7BE81;\" class=\"glyphicon glyphicon-star\"></span>";
                 pg += name;
@@ -159,7 +159,7 @@ function peopleAttend(eventName) {
                     name += " ";
                     name += usr.last_name;
                     var upvotes = usr.upvotes;
-                    var pg = "<p><a href=\"event.html\">";
+                    var pg = "<p><a href=\"user.html\" onclick=\"saveUser(this)\">";
                     pg += upvotes;
                     pg += "<span style=\"color:#F7BE81;\" class=\"glyphicon glyphicon-star\"></span>";
                     pg += name;

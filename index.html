@@ -637,7 +637,7 @@
                     <h3 class="panel-title"><b>Top Events</b></h3>
                 </div>
                 <div ng-controller="topEventsController" style=" height: 270px; overflow-y:auto !important;" class="panel-body panel-height">
-                    <p ng-repeat="x in top_events"><a href="event.html" onclick="saveEvent(this)">{{ x.upvotes }}<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> {{ x.name }} </a></p>
+                    <p ng-repeat="x in top_events"><a href="event.html" onclick="saveEvent(this)">{{ x.upvotes }}<span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span>{{ x.name }}</a></p>
 
                 </div>
             </div>
