@@ -67,17 +67,17 @@
             return Math.floor(Math.random() * y) + x;
         }
 
-        function showlegend(event_id, event_name, event_rating) {
+        function showlegend(event_id) {
             var elem = document.getElementById('legend');
             elem.style.display = 'block';
 
 
             // get Angular scope from the known DOM element
-			var e = $("[ng-controller='participantsController']");
+			var e = document.getElementById('participantsApp');
 			var scope = angular.element(e).scope();
 			// update the model with a wrap in $apply(fn) which will refresh the view for us
 			scope.$apply(function() {
-			    scope.updateParticipants(event_id, event_name, event_rating);
+			    scope.updateParticipants(event_id);
 			});
         }
 
@@ -86,6 +86,7 @@
             elem.style.display = 'none';
         }
 
+        // Some events have to be made in a certain order ...
 		var dfd = new jQuery.Deferred();
         var dfd2 = new jQuery.Deferred();
         
@@ -145,12 +146,11 @@
 	                            top_events[i].longitude),
 	                        map: map,
 	                        title: top_events[i].name,
-	                        event_id: top_events[i].id,
-	                        whole_event: top_events[i]
+	                        event_id: top_events[i].id
 	                    });
 
 	                    google.maps.event.addListener(marker, 'click', function() {
-	                        showlegend(marker.event_id, marker.title, marker.whole_event.upvotes);
+	                        showlegend(marker.event_id);
 	                        map.controls[google.maps.ControlPosition.TOP_CENTER].push(
 	                            document.getElementById('legend'));
 	                    });
@@ -237,6 +237,28 @@
 
         // onload
         function loadScript() {
+
+            angular.module('participantsApp', [])
+            	.controller('participantsController', participantsController);
+
+	        angular.module('topEventsApp', [])
+	            .controller('topEventsController', topEventsController);
+
+	        angular.module('topUsersApp', [])
+	            .controller('topUsersController', topUsersController);
+
+	        angular.module('nearbyEventsApp', [])
+	            .controller('nearbyEventsController', nearbyEventsController);
+
+
+            // They must be set after the document loads, otherwise there won't be any elements to get.
+            // It seems the first app is loaded by default, se we load the other two.
+            angular.bootstrap(document.getElementById("participantsApp"), ['participantsApp']);
+            angular.bootstrap(document.getElementById("topUsersApp"), ['topUsersApp']);
+            angular.bootstrap(document.getElementById("topEventsApp"), ['topEventsApp']);
+            angular.bootstrap(document.getElementById("nearbyEventsApp"), ['nearbyEventsApp']);
+
+
             $("#userName").text(user.first_name + " " + user.last_name + " " + user.upvotes);
 
         	// Update all form (for event type modals) actions.
@@ -248,13 +270,6 @@
             script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&' +
                 'callback=initialize';
             document.body.appendChild(script);
-
-            // They must be set after the document loads, otherwise there won't be any elements to get.
-            // It seems the first app is loaded by default, se we load the other two.
-            //angular.bootstrap(document.getElementById("participantsApp"), ['participantsApp']);
-            angular.bootstrap(document.getElementById("topUsersApp"), ['topUsersApp']);
-            angular.bootstrap(document.getElementById("topEventsApp"), ['topEventsApp']);
-            angular.bootstrap(document.getElementById("nearbyEventsApp"), ['nearbyEventsApp']);
         }
 
         function topEventsController($scope) {
@@ -269,9 +284,15 @@
             });
 
             request.done(function(top_events) {
-                $scope.top_events = $.parseJSON(top_events);
-                $scope.$apply();
-                $scope.saveEventAndRedirect = saveEventAndRedirect; // needs to be in scope
+
+            	// Can't directly assign to $scope because the dependency injection stuff.
+
+            	var e = document.getElementById('topEventsApp');
+				var scope = angular.element(e).scope();
+				scope.$apply(function() {
+				    scope.top_events = $.parseJSON(top_events);
+				    scope.saveEventAndRedirect = saveEventAndRedirect;
+				});
             });
         }
 
@@ -287,17 +308,13 @@
             });
 
             request.done(function(top_users) {
-            	var e = $("[ng-controller='topUsersController']");
-				var scope = angular.element(e).scope();
-				// update the model with a wrap in $apply(fn) which will refresh the view for us
-				scope.$apply(function() {
-				    scope.top_users = $.parseJSON(top_users);
-				});
+                $scope.top_users = $.parseJSON(top_users);
+                $scope.$apply();
             });
         }
 
         function participantsController($scope) {
-        	$scope.updateParticipants = function(event_id, event_name, event_rating) {
+        	$scope.updateParticipants = function(event_id) {
         		if(typeof(event_id) == 'undefined') {
 	        		$scope.participants = [];
 	        		$scope.$apply();
@@ -305,7 +322,7 @@
 	        	}
 
         		var request = $.ajax({
-	                url: "http://128.199.38.110:5000/events/" + event_id + "/users",
+	                url: "http://128.199.38.110:5000/events" + event_id + "/users",
 	                type: "GET",
 	                conection: "keep-alive",
 	                contentType: "application/json",
@@ -315,10 +332,12 @@
 	            });
 
 	            request.done(function(participants) {
-	                $scope.participants = $.parseJSON(participants);
-	                $scope.$apply();
 
-	                $("#legend h4").html(" " + event_name + "<span style='color:#F7BE81; '' class='glyphicon glyphicon glyphicon-star'></span> " + event_rating);
+	            	var e = document.getElementById('participantsApp');
+					var scope = angular.element(e).scope();
+					scope.$apply(function() {
+					    scope.participants = $.parseJSON(participants);
+					});
 	            });
         	} 
         }
@@ -337,24 +356,16 @@
            		});
 
 	            request.done(function(nearby_events) {
-	                $scope.nearby_events = $.parseJSON(nearby_events);
-	                $scope.$apply();
-                    $scope.saveEventAndRedirect = saveEventAndRedirect; // needs to be in scope
+	            	var e = document.getElementById('topEventsApp');
+					var scope = angular.element(e).scope();
+					scope.$apply(function() {
+					    scope.nearby_events = $.parseJSON(nearby_events);
+					    scope.saveEventAndRedirect = saveEventAndRedirect; // needs to be in scope
+					});
 	            });
         	});
+            
         }
-
-            angular.module('participantsApp', [])
-            	.controller('participantsController', participantsController);
-
-	        angular.module('topEventsApp', [])
-	            .controller('topEventsController', topEventsController);
-
-	        angular.module('topUsersApp', [])
-	            .controller('topUsersController', topUsersController);
-
-	        angular.module('nearbyEventsApp', [])
-	            .controller('nearbyEventsController', nearbyEventsController);
 
         window.onload = loadScript;
 
@@ -365,9 +376,7 @@
     <div id="legend">
         <div class="container-fluid">
             <div class="row">
-            	<div style="margin-left: 25px;">
-                	<h4> Titlu eveniment <span style="color:#F7BE81; " class="glyphicon glyphicon glyphicon-star"></span> 23</h4>
-                </div>
+                <h4> Titlu eveniment <span style="color:#F7BE81; " class="glyphicon glyphicon glyphicon-star"></span> 23</h4>
             </div>
             <div class="row col-sm-12">
 
@@ -383,20 +392,20 @@
                         <p ng-repeat="x in participants"><small> <a href="user.html"> {{ x.upvotes }} <span style="color:#F7BE81;" class="glyphicon glyphicon-star"></span> </a> {{ x.first_name + " " + x.last_name }} </small> </p>
                     </div>
 
-                    <div class="panel-footer" style="height:60px">
-	 					<div class="row col-sm-12 btn-group">
-		                    <div class=" col-sm-4">
-		                        <button class="btn btn-success btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-up"></span> +1 </button>
-		                    </div>
-		                    <div class=" col-sm-4">
-		                        <button class="btn btn-danger btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-down"></span> -1 </button>
-		                    </div>
-		                    <div class=" col-sm-4">
-		                        <button class="btn btn-info btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
-		                    </div>
-	               		</div>
-		            </div>
-                </div> 
+                </div>
+
+                <div class="row col-sm-12 spacer2">
+                    <div class=" col-sm-4">
+                        <button class="btn btn-success btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-up"></span> +1 </button>
+                    </div>
+                    <div class=" col-sm-4">
+                        <button class="btn btn-danger btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-down"></span> -1 </button>
+                    </div>
+                    <div class=" col-sm-4">
+                        <button class="btn btn-info btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

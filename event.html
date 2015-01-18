@@ -65,6 +65,19 @@
 	        });
 		}
 
+		function attend() {
+			var request = $.ajax({
+	                url: "http://128.199.38.110:5000/events/" + user_event.id + "/users",
+	                type: "POST",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                data: JSON.stringify(user),
+	                cache: false,
+	                timeout: 10000,
+	                processData: false,
+		    });
+		}
+
     	function signout() {
     		sessionStorage.user = null;
     		localStorage.user = null;
@@ -158,7 +171,7 @@
 					<button class="btn btn-danger btn-block" onclick="downvote()"><span class="glyphicon glyphicon-hand-down"></span> Rate -1 </button>
 				</div>
 				<div class="col-sm-4 emphasis">
-					<button class="btn btn-info btn-block"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
+					<button class="btn btn-info btn-block" onclick="attend()"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
 				</div>
 			</div>
 		</div> <!-- End Event Panel-->
