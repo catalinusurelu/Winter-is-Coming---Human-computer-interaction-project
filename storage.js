@@ -8,7 +8,7 @@ function init_storage() {
     		window.location.href = "login.html";
     }
 
-	if(sessionStorage.user) {
+	if(sessionStorage.user && sessionStorage.user != "null") {
 		storage = sessionStorage;
 	}
 	else

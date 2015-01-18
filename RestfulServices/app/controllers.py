@@ -143,13 +143,32 @@ def upvote_event(user_id, event_id):
                                                   UserEventsLink.user_id == user_id,
                                                   UserEventsLink.event_id == event_id).first()
 
+    if usersEventsLink is None:
+        usersEventsLink = UserEventsLink.query.filter(UserEventsLink.user_id == user_id,
+                                                      UserEventsLink.event_id == event_id).first()
+        if usersEventsLink is None:
+            user = User.query.get(user_id)
+            event = Event.query.get(event_id)
+
+            usersEventsLink = UserEventsLink(user = user, event = event, vote = 1)
+
+            db.session.add(usersEventsLink)
+
+            event.upvotes = event.upvotes + 1
+
+            db.session.commit()
+
+            return str(event.upvotes)
+        else:
+            return ""
+
     if usersEventsLink is not None:
         usersEventsLink.vote = usersEventsLink.vote + 1
         usersEventsLink.event.upvotes = usersEventsLink.event.upvotes + 1
         db.session.add(usersEventsLink)
         db.session.commit()
 
-        return str(usersEventsLink.vote)
+        return str(usersEventsLink.event.upvotes)
 
     return ""
 
@@ -160,13 +179,36 @@ def downvote_event(user_id, event_id):
                                                   UserEventsLink.user_id == user_id,
                                                   UserEventsLink.event_id == event_id).first()
 
+    if usersEventsLink is None:
+        usersEventsLink = UserEventsLink.query.filter(UserEventsLink.user_id == user_id,
+                                                      UserEventsLink.event_id == event_id).first()
+        if usersEventsLink is None:
+            user = User.query.get(user_id)
+            event = Event.query.get(event_id)
+
+            if event.upvotes > 0:
+                usersEventsLink = UserEventsLink(user = user, event = event, vote = -1)
+
+                db.session.add(usersEventsLink)
+
+                event.upvotes = event.upvotes - 1
+                
+                db.session.commit()
+
+                return str(event.upvotes)
+            else:
+                return ""
+        else:
+            return ""
+
+
     if usersEventsLink is not None:
         usersEventsLink.vote = usersEventsLink.vote - 1
         usersEventsLink.event.upvotes = usersEventsLink.event.upvotes - 1
         db.session.add(usersEventsLink)
         db.session.commit()
 
-        return str(usersEventsLink.vote)
+        return str(usersEventsLink.event.upvotes)
 
     return ""
 

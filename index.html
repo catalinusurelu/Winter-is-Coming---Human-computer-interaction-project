@@ -49,6 +49,7 @@
     	init_storage();
 
         var user = $.parseJSON(storage['user']);
+        var user_event;
 
     	function signout() {
     		sessionStorage.user = null;
@@ -67,17 +68,20 @@
             return Math.floor(Math.random() * y) + x;
         }
 
-        function showlegend(event_id, event_name, event_rating) {
+        function showlegend(whole_event) {
             var elem = document.getElementById('legend');
             elem.style.display = 'block';
 
+            if(typeof(whole_event) != 'undefined') {
+            	user_event = whole_event;
+            }
 
             // get Angular scope from the known DOM element
 			var e = $("[ng-controller='participantsController']");
 			var scope = angular.element(e).scope();
 			// update the model with a wrap in $apply(fn) which will refresh the view for us
 			scope.$apply(function() {
-			    scope.updateParticipants(event_id, event_name, event_rating);
+			    scope.updateParticipants(user_event);
 			});
         }
 
@@ -123,6 +127,9 @@
 	            map = new google.maps.Map(document.getElementById('map-canvas'),
 	                mapOptions);
 
+	            map.controls[google.maps.ControlPosition.TOP_CENTER].push(
+	                            document.getElementById('legend'));
+
 
 	            // Get stored event and place them on map.
 	            var request = $.ajax({
@@ -131,7 +138,6 @@
 	                conection: "keep-alive",
 	                contentType: "application/json",
 	                cache: false,
-	                timeout: 10000,
 	                processData: false,
 	            });
 
@@ -150,9 +156,7 @@
 	                    });
 
 	                    google.maps.event.addListener(marker, 'click', function() {
-	                        showlegend(marker.event_id, marker.title, marker.whole_event.upvotes);
-	                        map.controls[google.maps.ControlPosition.TOP_CENTER].push(
-	                            document.getElementById('legend'));
+	                        showlegend(marker.whole_event);
 	                    });
 
 	                    google.maps.event.addListener(map, 'click', function() {
@@ -225,7 +229,6 @@
                 conection: "keep-alive",
                 contentType: "application/json",
                 cache: false,
-                timeout: 10000,
                 processData: false,
             });
 
@@ -257,6 +260,64 @@
             angular.bootstrap(document.getElementById("nearbyEventsApp"), ['nearbyEventsApp']);
         }
 
+
+        function upvote() {
+			var request = $.ajax({
+	                url: "http://128.199.38.110:5000/users/" + user.id + "/events/" + user_event.id + "/upvote",
+	                type: "POST",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                cache: false,
+	                processData: false,
+		    });
+
+	        request.done(function(rating) {
+	        	if(rating) {
+	        		user_event.upvotes = Number(rating);
+	        		hidelegend();
+		        	showlegend();
+	        	}
+	        });
+		}
+
+		function downvote() {
+			var request = $.ajax({
+	                url: "http://128.199.38.110:5000/users/" + user.id + "/events/" + user_event.id + "/downvote",
+	                type: "POST",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                cache: false,
+	                processData: false,
+		    });
+
+	        request.done(function(rating) {
+	        	if(rating) {
+	        		user_event.upvotes = Number(rating);
+	        		hidelegend();
+		        	showlegend();
+	        	}
+	       		
+	        });
+		}
+
+		function attend() {
+			var request = $.ajax({
+	                url: "http://128.199.38.110:5000/events/" + user_event.id + "/users",
+	                type: "POST",
+	                conection: "keep-alive",
+	                contentType: "application/json",
+	                data: JSON.stringify(user),
+	                cache: false,
+	                processData: false,
+		    });
+
+
+	        request.done(function() {
+        		hidelegend();
+	        	showlegend();
+	        });
+		}
+
         function topEventsController($scope) {
             var request = $.ajax({
                 url: "http://128.199.38.110:5000/top_events",
@@ -264,7 +325,6 @@
                 conection: "keep-alive",
                 contentType: "application/json",
                 cache: false,
-                timeout: 10000,
                 processData: false,
             });
 
@@ -282,7 +342,6 @@
                 conection: "keep-alive",
                 contentType: "application/json",
                 cache: false,
-                timeout: 10000,
                 processData: false,
             });
 
@@ -297,20 +356,19 @@
         }
 
         function participantsController($scope) {
-        	$scope.updateParticipants = function(event_id, event_name, event_rating) {
-        		if(typeof(event_id) == 'undefined') {
+        	$scope.updateParticipants = function(whole_event) {
+        		if(typeof(whole_event) == 'undefined') {
 	        		$scope.participants = [];
 	        		$scope.$apply();
 	        		return;
 	        	}
 
         		var request = $.ajax({
-	                url: "http://128.199.38.110:5000/events/" + event_id + "/users",
+	                url: "http://128.199.38.110:5000/events/" + whole_event.id + "/users",
 	                type: "GET",
 	                conection: "keep-alive",
 	                contentType: "application/json",
 	                cache: false,
-	                timeout: 10000,
 	                processData: false,
 	            });
 
@@ -318,7 +376,8 @@
 	                $scope.participants = $.parseJSON(participants);
 	                $scope.$apply();
 
-	                $("#legend h4").html(" " + event_name + "<span style='color:#F7BE81; '' class='glyphicon glyphicon glyphicon-star'></span> " + event_rating);
+	                $("#legend h4").html(" " + whole_event.name + "<span style='color:#F7BE81; '' class='glyphicon glyphicon glyphicon-star'></span> " +
+	                											  "<span id='rating'> " + whole_event.upvotes + "</span>");
 	            });
         	} 
         }
@@ -331,7 +390,6 @@
 	                conection: "keep-alive",
 	                contentType: "application/json",
 	                cache: false,
-	                timeout: 10000,
 	                data: "latitude=" + currentLatitude+ "&longitude=" + currentLongitude+ "&radius=0.00001", // 5 decimal places is aproximately 20-40 km
 	                processData: false,
            		});
@@ -344,17 +402,17 @@
         	});
         }
 
-            angular.module('participantsApp', [])
-            	.controller('participantsController', participantsController);
+        angular.module('participantsApp', [])
+        	.controller('participantsController', participantsController);
 
-	        angular.module('topEventsApp', [])
-	            .controller('topEventsController', topEventsController);
+        angular.module('topEventsApp', [])
+            .controller('topEventsController', topEventsController);
 
-	        angular.module('topUsersApp', [])
-	            .controller('topUsersController', topUsersController);
+        angular.module('topUsersApp', [])
+            .controller('topUsersController', topUsersController);
 
-	        angular.module('nearbyEventsApp', [])
-	            .controller('nearbyEventsController', nearbyEventsController);
+        angular.module('nearbyEventsApp', [])
+            .controller('nearbyEventsController', nearbyEventsController);
 
         window.onload = loadScript;
 
@@ -366,7 +424,7 @@
         <div class="container-fluid">
             <div class="row">
             	<div style="margin-left: 25px;">
-                	<h4> Titlu eveniment <span style="color:#F7BE81; " class="glyphicon glyphicon glyphicon-star"></span> 23</h4>
+                	<h4> Titlu eveniment <span style="color:#F7BE81; " class="glyphicon glyphicon glyphicon-star"></span> <span id="rating"> 23 </span> </h4>
                 </div>
             </div>
             <div class="row col-sm-12">
@@ -386,13 +444,13 @@
                     <div class="panel-footer" style="height:60px">
 	 					<div class="row col-sm-12 btn-group">
 		                    <div class=" col-sm-4">
-		                        <button class="btn btn-success btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-up"></span> +1 </button>
+		                        <button class="btn btn-success btn-block btn-xs" onclick="upvote()"><span class="glyphicon glyphicon-hand-up"></span> +1 </button>
 		                    </div>
 		                    <div class=" col-sm-4">
-		                        <button class="btn btn-danger btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-down"></span> -1 </button>
+		                        <button class="btn btn-danger btn-block btn-xs" onclick="downvote()"><span class="glyphicon glyphicon-hand-down"></span> -1 </button>
 		                    </div>
 		                    <div class=" col-sm-4">
-		                        <button class="btn btn-info btn-block btn-xs" onclick="vote()"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
+		                        <button class="btn btn-info btn-block btn-xs" onclick="attend()"><span class="glyphicon glyphicon-hand-right"></span> Attend </button>
 		                    </div>
 	               		</div>
 		            </div>
