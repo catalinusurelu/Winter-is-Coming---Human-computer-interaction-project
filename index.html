@@ -15,7 +15,7 @@
 
 
 
-    <title>Winter is comming</title>
+    <title>Winter is coming</title>
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 
@@ -33,7 +33,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" type="text/css">
     <link rel="stylesheet" href="fileButtonStyle.css" type="text/css">
-    
+
 
     <script type="text/javascript">
     	var map;
@@ -92,11 +92,11 @@
 
 		var dfd = new jQuery.Deferred();
         var dfd2 = new jQuery.Deferred();
-        
-	
+
+
 		if (navigator.geolocation) {
 	        navigator.geolocation.getCurrentPosition(setCurrentPositionSuccess, setCurrentPositionFailure);
-	    } else { 
+	    } else {
 	        setCurrentPositionFailure();
 	    }
 
@@ -111,8 +111,8 @@
 		    currentLongitude = 26.049492;
 		    dfd.resolve();
 		}
-		
-	
+
+
 
         // Populate map events.
         function initialize() {
@@ -192,7 +192,7 @@
         }
 
         function placeMarkerFromModal(id) {
-		    
+
         	google.maps.event.addListener(map, 'click', function(event) {
 
         		modalLat = event.latLng.lat();
@@ -217,7 +217,7 @@
 
                 google.maps.event.clearListeners(map, 'click');
 
-                $("#" + id).modal('show'); 
+                $("#" + id).modal('show');
             });
         }
 
@@ -296,7 +296,7 @@
 	        		hidelegend();
 		        	showlegend();
 	        	}
-	       		
+
 	        });
 		}
 
@@ -379,7 +379,7 @@
 	                $("#legend h4").html(" " + whole_event.name + "<span style='color:#F7BE81; '' class='glyphicon glyphicon glyphicon-star'></span> " +
 	                											  "<span id='rating'> " + whole_event.upvotes + "</span>");
 	            });
-        	} 
+        	}
         }
 
         function nearbyEventsController($scope) {
@@ -454,7 +454,7 @@
 		                    </div>
 	               		</div>
 		            </div>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -567,8 +567,8 @@
                                 </div>
                                 <!-- end modal-body -->
 
-                                
-                               
+
+
 
                             </div>
                             <!-- end modal-content -->
