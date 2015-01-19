@@ -89,6 +89,26 @@ def users():
 
         return json.dumps(user.to_dict())
 
+@app.route('/users/<int:user_id>', methods=['GET', 'POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])
+def user_id(user_id):
+    user = User.query.get(user_id)
+    if(request.method == "GET"):
+        return json.dumps(user.to_dict(), sort_keys=True, indent=4, separators=(',', ': '))
+    else:
+        app.logger.info("starting")
+        jss = request.get_json()
+        app.logger.info(str(jss))
+
+        user = User(**jss)
+        db.session.add(user)
+        db.session.commit()
+
+        # Get user with id.
+        user = User.query.order_by(User.id.desc()).first()
+
+        return json.dumps(user.to_dict())
+
 @app.route('/events', methods=['GET', 'POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'OPTIONS'], headers=['Content-Type'])
 def events():

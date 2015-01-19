@@ -90,11 +90,37 @@
 	        txt += " " + $.parseJSON(storage['user']).last_name;
 	        saveHeadUser(txt);
 	    }
+
+	    $(function() {
+	        $('#event_name').text(user_event.name);
+            $('#Rating').html(" " + user_event.upvotes);
+            $('#status').text(user_event.event_status);
+            $('#message').text(user_event.description);
+            if(user_event.image_url) {
+                $("img").attr("src", "http://128.199.38.110/" + user_event.image_url);
+            }
+
+            $.ajax({
+	        	url: "http://128.199.38.110:5000/users/" + user_event.creator_id,
+		      	type: "GET",
+                conection: "keep-alive",
+                contentType: "application/json",
+                cache: false,
+                processData: false,
+	      		success: function(data) {
+	      			usr = $.parseJSON(data);
+                    $('#initiator').text(usr.first_name + " " + usr.last_name);
+                    $('#headername').text(usr.first_name + " " + usr.last_name + " " + usr.upvotes);
+			    }
+			});
+
+			peopleAttend(user_event);
+	    });
 	</script>
 
 </head>
 
-<body onload="eventRequest()">
+<body>
 
 	<div class="container" id="main">
 
@@ -146,7 +172,7 @@
 		<div class=" profile row col-sm-9 spacer">
 
 			<div class="col-sm-9">
-				<div class="col-sm-9">
+				<div class="col-sm-5">
 					<h2><span id="event_name"></span></h2>
 					<p><strong><span class="glyphicon glyphicon glyphicon-user"></span> Initiator: </strong><span id="initiator"></span></p>
 					<p><strong><span class="glyphicon glyphicon-map-marker"></span> Location: </strong> Bucharest </p>
@@ -157,8 +183,8 @@
 					<p><small>Evaluate this event:</small></p>
 
 				</div>
-				<div class="col-sm-3 text-center">
-					<img src="http://www.localcrimenews.com/wp-content/uploads/2013/07/default-user-icon-profile.png" alt="" class="img-responsive">
+				<div class="col-sm-7 text-center">
+					<img src="http://www.localcrimenews.com/wp-content/uploads/2013/07/default-user-icon-profile.png" alt="" height="240" width="450">
 				</div>
 			</div>
 
